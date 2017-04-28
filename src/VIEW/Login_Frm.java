@@ -1,17 +1,13 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 package VIEW;
 
-import javax.swing.JOptionPane;
-import DATA.*;
+import CONTROLLER.*;
 import MODEL.*;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author MASS MNM
@@ -24,9 +20,26 @@ public class Login_Frm extends javax.swing.JFrame {
     public Login_Frm() {
         initComponents();
         LogDB =new Login_DB();
-          
     }
-
+    
+    
+    private boolean isValidate(){ //Validate change into isValidate
+       
+        
+        if (txtUname.getText().equals("")) //flag=false;
+        {
+            JOptionPane.showMessageDialog(rootPane, "User Name is a requied field");  //help message
+            txtUname.requestFocusInWindow();
+            return false;
+        }
+        if (txtPwd.getText().equals("")) //flag=false;
+        {
+            JOptionPane.showMessageDialog(rootPane, "Password is a requied field");  //help message
+            txtPwd.requestFocusInWindow();
+            return false;
+        }
+        return true;
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -36,115 +49,92 @@ public class Login_Frm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        txtuname = new javax.swing.JTextField();
-        txtpwd = new javax.swing.JPasswordField();
-        btncancel = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel5 = new javax.swing.JLabel();
         btnlogin = new javax.swing.JButton();
+        btnclear = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtUname = new javax.swing.JTextField();
+        txtPwd = new javax.swing.JPasswordField();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(615, 430));
+        setMinimumSize(new java.awt.Dimension(615, 430));
+        setPreferredSize(new java.awt.Dimension(615, 430));
+        getContentPane().setLayout(null);
+        getContentPane().add(jSeparator1);
+        jSeparator1.setBounds(40, 80, 280, 10);
 
-        jLabel1.setText("User Name");
+        jLabel5.setFont(new java.awt.Font("Copperplate Gothic Light", 1, 24)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("USER LOGIN");
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(50, 40, 260, 30);
 
-        jLabel2.setText("Password");
-
-        btncancel.setText("CANCEL");
-        btncancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btncancelActionPerformed(evt);
-            }
-        });
-
+        btnlogin.setBackground(new java.awt.Color(0, 0, 0));
+        btnlogin.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnlogin.setForeground(new java.awt.Color(255, 255, 255));
         btnlogin.setText("LOGIN");
         btnlogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnloginActionPerformed(evt);
             }
         });
+        getContentPane().add(btnlogin);
+        btnlogin.setBounds(70, 270, 100, 40);
 
-        jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel3.setText("USER LOGIN ");
+        btnclear.setBackground(new java.awt.Color(0, 0, 0));
+        btnclear.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnclear.setForeground(new java.awt.Color(255, 255, 255));
+        btnclear.setText("CLEAR");
+        btnclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnclearActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnclear);
+        btnclear.setBounds(190, 270, 100, 40);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(45, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnlogin, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(46, 46, 46)
-                        .addComponent(btncancel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(34, 34, 34)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtpwd, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtuname, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(46, 138, Short.MAX_VALUE))
-        );
+        jPanel1.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel1.setOpaque(false);
+        jPanel1.setLayout(null);
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btncancel, btnlogin});
+        jLabel3.setFont(new java.awt.Font("Copperplate Gothic Light", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("User Name");
+        jPanel1.add(jLabel3);
+        jLabel3.setBounds(30, 10, 120, 30);
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtpwd, txtuname});
+        jLabel4.setFont(new java.awt.Font("Copperplate Gothic Light", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Password");
+        jPanel1.add(jLabel4);
+        jLabel4.setBounds(30, 80, 130, 30);
+        jPanel1.add(txtUname);
+        txtUname.setBounds(30, 40, 220, 40);
+        jPanel1.add(txtPwd);
+        txtPwd.setBounds(30, 110, 220, 40);
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2});
+        getContentPane().add(jPanel1);
+        jPanel1.setBounds(40, 90, 280, 240);
 
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jLabel3)
-                .addGap(41, 41, 41)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtuname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(46, 46, 46)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtpwd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(34, 34, 34)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnlogin, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btncancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(71, Short.MAX_VALUE))
-        );
-
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btncancel, btnlogin});
-
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtpwd, txtuname});
-
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, jLabel2});
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        jLabel2.setIcon(new javax.swing.ImageIcon("F:\\Final Project\\CricketTeam_Selection\\src\\IMAGES\\llll.jpg")); // NOI18N
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(0, 0, 620, 390);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnloginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnloginActionPerformed
-         
-        String uName=txtuname.getText().trim();   //input login name
-        String pwd=txtpwd.getText().trim();    //input login password
+        // TODO add your handling code here:
+        if(isValidate()){
+        String uName=txtUname.getText();   //input login name
+        String pwd=txtPwd.getText().trim();    //input login password
         
        // Login log=new Login(uName,pwd);
         String password=LogDB.getPassword(uName);   //
@@ -155,45 +145,35 @@ public class Login_Frm extends javax.swing.JFrame {
               String uType=LogDB.getUserType(uName);
               AdminStatus.type=uType;
             
-              MAIN_Frm mainFrame=new MAIN_Frm();
-              mainFrame.setVisible(true);
+             Main_Frm mainFrame=new  Main_Frm();
+             mainFrame.setVisible(true);
             
             this.dispose();
         }else{
-            JOptionPane.showMessageDialog(rootPane, "Login Failure"); //help message
+              
+            JOptionPane.showMessageDialog(null, "Login Failure","Failure", JOptionPane.INFORMATION_MESSAGE); //help message
         }
+    }
     }//GEN-LAST:event_btnloginActionPerformed
 
-    private void btncancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelActionPerformed
+    private void btnclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnclearActionPerformed
         // TODO add your handling code here:
-        txtuname.setText("");
-        txtpwd.setText("");
-    }//GEN-LAST:event_btncancelActionPerformed
-private boolean isValidate(){ //Validate change into isValidate
-       // boolean flag=true;
-       // text boxes can't be empty
-        if (txtuname.getText().equals("")) //flag=false;
-        {
-            JOptionPane.showMessageDialog(rootPane, "User Name is a requied field");  //help message
-            txtuname.requestFocusInWindow();
-            return false;
-        }
-        if (txtpwd.getText().equals("")) //flag=false;
-        {
-            JOptionPane.showMessageDialog(rootPane, "Password is a requied field");  //help message
-            txtpwd.requestFocusInWindow();
-            return false;
-        }
-        return true;
-}
+         txtUname.setText("");
+         txtPwd.setText("");
+    }//GEN-LAST:event_btnclearActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
+        /*
+         * Set the Nimbus look and feel
+         */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the
+         * default look and feel. For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -213,22 +193,26 @@ private boolean isValidate(){ //Validate change into isValidate
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /*
+         * Create and display the form
+         */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new Login_Frm().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btncancel;
+    private javax.swing.JButton btnclear;
     private javax.swing.JButton btnlogin;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField txtpwd;
-    private javax.swing.JTextField txtuname;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPasswordField txtPwd;
+    private javax.swing.JTextField txtUname;
     // End of variables declaration//GEN-END:variables
 }

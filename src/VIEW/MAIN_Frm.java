@@ -1,64 +1,47 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 package VIEW;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import CONTROLLER.*;
 import MODEL.*;
-import DATA.*;
+
 /**
  *
  * @author MASS MNM
  */
-public class MAIN_Frm extends javax.swing.JFrame {
-   Login ll;
+public class Main_Frm extends javax.swing.JFrame {
+
     /**
-     * Creates new form MAIN_Frm
+     * Creates new form Main_Frm
      */
-    public MAIN_Frm() {
-         initComponents();
-        // l= new Login();
-//         
-//       if(AdminStatus.type.equals("Admin")){  
-//           
-//           
-//            mnuregister.setVisible(true);
-//           
-//          lblstatus.setText("Welcome "+ l.getUName()+"!");
-//          // this.l=l;
-//             
-//             
-//             
-//        }else if(AdminStatus.type.equals("Manager")){
-//            mnuregister.setVisible(false);
-//            
-//        }else if(AdminStatus.type.equals("Players")){
-//              mnuregister.setVisible(false);
-//              mnuchngepwd.setVisible(false);
-//        }
-//        Calendar cal = new GregorianCalendar();
-//        int month = cal.get(Calendar.MONTH);
-//        int year = cal.get(Calendar.YEAR);
-//        int day = cal.get(Calendar.DAY_OF_MONTH);
-        //txtSyDate.setText(year + "/" + (month + 1) + "/" + day);
+    public Main_Frm() {
+        initComponents();
         
-    }
-//   
-      public MAIN_Frm(Login e) {
-         initComponents();
-        
-           lblstatus.setText("Welcome "+ e.getUName()+"!");
-            this.ll=e;
-         
-       
-    }
-   
-   
-         
-    
+               if(AdminStatus.type.equals("Super Admin")){  
+                   
+               }else if(AdminStatus.type.equals("Manager")){
+                    mnuPCategory.setVisible(false);   
+                    mnuAllrounder.setVisible(false);
+                    mnuBatsman.setVisible(false);
+                    mnuBowler.setVisible(false);
+                    mnuWicketKeeper.setVisible(false);
+               }else if(AdminStatus.type.equals("Players")){
+                    mnuChangePassword.setVisible(false);
+                    mnuPCategory.setVisible(false);
+                    mnuAllrounder.setVisible(false);
+                    mnuBatsman.setVisible(false);
+                    mnuBowler.setVisible(false);
+                    mnuWicketKeeper.setVisible(false);
+                    mnuNewAllrounder.setVisible(false);
+                    mnunewbatsman.setVisible(false);
+                    mnunewbowler.setVisible(false);
+                    mnuNewkeeper.setVisible(false);
+               }
+               
+   }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -70,183 +53,332 @@ public class MAIN_Frm extends javax.swing.JFrame {
 
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuBar2 = new javax.swing.JMenuBar();
-        jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
-        jMenuBar3 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
-        jMenu6 = new javax.swing.JMenu();
-        jLabel1 = new javax.swing.JLabel();
-        lbluname = new javax.swing.JLabel();
-        lblstatus = new javax.swing.JLabel();
+        jMenu7 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        lblDate = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
-        jmnuBatsamn = new javax.swing.JMenuItem();
-        mnubowler = new javax.swing.JMenuItem();
+        mnuBatsmans = new javax.swing.JMenu();
+        mnuBatsman = new javax.swing.JMenuItem();
+        mnunewbatsman = new javax.swing.JMenuItem();
+        mnuBowlers = new javax.swing.JMenu();
+        mnuBowler = new javax.swing.JMenuItem();
+        mnunewbowler = new javax.swing.JMenuItem();
+        mnuAllrouders = new javax.swing.JMenu();
         mnuAllrounder = new javax.swing.JMenuItem();
-        mnuWkeeper = new javax.swing.JMenuItem();
+        mnuNewAllrounder = new javax.swing.JMenuItem();
+        mnuKeepers = new javax.swing.JMenu();
+        mnuWicketKeeper = new javax.swing.JMenuItem();
+        mnuNewkeeper = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        mnuregister = new javax.swing.JMenuItem();
-        mnuchngepwd = new javax.swing.JMenuItem();
-        jMenu7 = new javax.swing.JMenu();
+        mnuViewBatsman = new javax.swing.JMenuItem();
+        mnuViewBowler = new javax.swing.JMenuItem();
+        mnuViewAllrounder = new javax.swing.JMenuItem();
+        mnuViewWicketKeeper = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        mnuChangePassword = new javax.swing.JMenuItem();
+        mnuResgister = new javax.swing.JMenuItem();
+        mnuPCategory = new javax.swing.JMenuItem();
+        jMenu6 = new javax.swing.JMenu();
+        jMenu8 = new javax.swing.JMenu();
+        jMenu9 = new javax.swing.JMenu();
+        jMenu10 = new javax.swing.JMenu();
 
         jMenuItem1.setText("jMenuItem1");
 
-        jMenu3.setText("File");
-        jMenuBar2.add(jMenu3);
-
-        jMenu4.setText("Edit");
+        jMenu4.setText("File");
         jMenuBar2.add(jMenu4);
+
+        jMenu5.setText("Edit");
+        jMenuBar2.add(jMenu5);
+
+        jMenu7.setText("jMenu7");
 
         jMenuItem2.setText("jMenuItem2");
 
-        jCheckBoxMenuItem1.setSelected(true);
-        jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
+        jMenuItem3.setText("jMenuItem3");
 
-        jMenu5.setText("File");
-        jMenuBar3.add(jMenu5);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(703, 455));
+        getContentPane().setLayout(null);
 
-        jMenu6.setText("Edit");
-        jMenuBar3.add(jMenu6);
+        lblDate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/main.jpg"))); // NOI18N
+        getContentPane().add(lblDate);
+        lblDate.setBounds(0, 0, 700, 400);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("F:\\Final Project\\CricketTeam_PlayerSelection\\src\\com\\player\\Images\\Pallekele-Cricket-Stadium-001.jpg")); // NOI18N
-        jLabel1.setText("jLabel1");
+        jMenuBar1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
 
         jMenu1.setText("File");
 
-        jmnuBatsamn.setText("BATSMAN FORM");
-        jmnuBatsamn.addActionListener(new java.awt.event.ActionListener() {
+        mnuBatsmans.setText("BATSMAN FORM");
+
+        mnuBatsman.setText("Training Batsman");
+        mnuBatsman.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jmnuBatsamnActionPerformed(evt);
+                mnuBatsmanActionPerformed(evt);
             }
         });
-        jMenu1.add(jmnuBatsamn);
+        mnuBatsmans.add(mnuBatsman);
 
-        mnubowler.setText("BOWLER FORM");
-        mnubowler.addActionListener(new java.awt.event.ActionListener() {
+        mnunewbatsman.setText("New Batsman");
+        mnunewbatsman.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnubowlerActionPerformed(evt);
+                mnunewbatsmanActionPerformed(evt);
             }
         });
-        jMenu1.add(mnubowler);
+        mnuBatsmans.add(mnunewbatsman);
 
-        mnuAllrounder.setText("ALL ROUNDER FORM");
+        jMenu1.add(mnuBatsmans);
+
+        mnuBowlers.setText("BOWLER FORM");
+
+        mnuBowler.setText("Training Bowler");
+        mnuBowler.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuBowlerActionPerformed(evt);
+            }
+        });
+        mnuBowlers.add(mnuBowler);
+
+        mnunewbowler.setText("New Bowler");
+        mnunewbowler.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnunewbowlerActionPerformed(evt);
+            }
+        });
+        mnuBowlers.add(mnunewbowler);
+
+        jMenu1.add(mnuBowlers);
+
+        mnuAllrouders.setText("ALLROUNDER FORM");
+
+        mnuAllrounder.setText("Training All Rounder");
         mnuAllrounder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuAllrounderActionPerformed(evt);
             }
         });
-        jMenu1.add(mnuAllrounder);
+        mnuAllrouders.add(mnuAllrounder);
 
-        mnuWkeeper.setText("WICKETKEEPER FORM");
-        mnuWkeeper.addActionListener(new java.awt.event.ActionListener() {
+        mnuNewAllrounder.setText("New All Rounder");
+        mnuNewAllrounder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuWkeeperActionPerformed(evt);
+                mnuNewAllrounderActionPerformed(evt);
             }
         });
-        jMenu1.add(mnuWkeeper);
+        mnuAllrouders.add(mnuNewAllrounder);
+
+        jMenu1.add(mnuAllrouders);
+
+        mnuKeepers.setText("WICKET KEEPER FORM");
+
+        mnuWicketKeeper.setText("Training Wicket Keeper");
+        mnuWicketKeeper.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuWicketKeeperActionPerformed(evt);
+            }
+        });
+        mnuKeepers.add(mnuWicketKeeper);
+
+        mnuNewkeeper.setText("New Wicket Keeper");
+        mnuNewkeeper.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuNewkeeperActionPerformed(evt);
+            }
+        });
+        mnuKeepers.add(mnuNewkeeper);
+
+        jMenu1.add(mnuKeepers);
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Edit");
+        jMenu2.setText("View");
 
-        mnuregister.setText("REGISTER FORM");
-        mnuregister.addActionListener(new java.awt.event.ActionListener() {
+        mnuViewBatsman.setText("VIEW TEAM BATSMAN LIST");
+        mnuViewBatsman.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuregisterActionPerformed(evt);
+                mnuViewBatsmanActionPerformed(evt);
             }
         });
-        jMenu2.add(mnuregister);
+        jMenu2.add(mnuViewBatsman);
 
-        mnuchngepwd.setText("CHANGE PASSWORD");
-        mnuchngepwd.addActionListener(new java.awt.event.ActionListener() {
+        mnuViewBowler.setText("VIEW TEAM BOWLER LIST");
+        mnuViewBowler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuchngepwdActionPerformed(evt);
+                mnuViewBowlerActionPerformed(evt);
             }
         });
-        jMenu2.add(mnuchngepwd);
+        jMenu2.add(mnuViewBowler);
+
+        mnuViewAllrounder.setText("VIEW TEAM ALLROUNDER LIST");
+        mnuViewAllrounder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuViewAllrounderActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mnuViewAllrounder);
+
+        mnuViewWicketKeeper.setText("VIEW TEAM WICKET KEEPER LIST");
+        mnuViewWicketKeeper.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuViewWicketKeeperActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mnuViewWicketKeeper);
 
         jMenuBar1.add(jMenu2);
 
-        jMenu7.setText("Help");
-        jMenuBar1.add(jMenu7);
+        jMenu3.setText("Tools");
+
+        mnuChangePassword.setText("CHANGE PASSWORD");
+        mnuChangePassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuChangePasswordActionPerformed(evt);
+            }
+        });
+        jMenu3.add(mnuChangePassword);
+
+        mnuResgister.setText("REGISTER FORM");
+        mnuResgister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuResgisterActionPerformed(evt);
+            }
+        });
+        jMenu3.add(mnuResgister);
+
+        mnuPCategory.setText("ADD PLAYER CATGEGORY");
+        mnuPCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuPCategoryActionPerformed(evt);
+            }
+        });
+        jMenu3.add(mnuPCategory);
+
+        jMenuBar1.add(jMenu3);
+
+        jMenu6.setText("Reports");
+        jMenuBar1.add(jMenu6);
+
+        jMenu8.setText("Run");
+        jMenuBar1.add(jMenu8);
+
+        jMenu9.setText("About");
+        jMenuBar1.add(jMenu9);
+
+        jMenu10.setText("Help");
+        jMenuBar1.add(jMenu10);
 
         setJMenuBar(jMenuBar1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbluname)
-                .addGap(40, 40, 40)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 939, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 635, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(lbluname))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jmnuBatsamnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmnuBatsamnActionPerformed
+    private void mnuBatsmanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBatsmanActionPerformed
         // TODO add your handling code here:
-        Batsman_Frm BatFrm=new  Batsman_Frm(); //click the the Employee get the Employee frame
-        BatFrm.setVisible(true);
-    }//GEN-LAST:event_jmnuBatsamnActionPerformed
+           Batsman_Frm Batsman=new  Batsman_Frm();  
+           Batsman.setVisible(true);
+    }//GEN-LAST:event_mnuBatsmanActionPerformed
 
-    private void mnubowlerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnubowlerActionPerformed
+    private void mnuBowlerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBowlerActionPerformed
         // TODO add your handling code here:
-        Bowler_Frm BowlFrm=new  Bowler_Frm(); 
-        BowlFrm.setVisible(true);
-    }//GEN-LAST:event_mnubowlerActionPerformed
+           Bowler_Frm Bowler=new  Bowler_Frm();  
+           Bowler.setVisible(true);
+    }//GEN-LAST:event_mnuBowlerActionPerformed
 
     private void mnuAllrounderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAllrounderActionPerformed
         // TODO add your handling code here:
-       Allrounder_Frm AllrFrm=new  Allrounder_Frm(); 
-        AllrFrm.setVisible(true);
+        Allrounder_Frm AllRounder=new  Allrounder_Frm(); 
+        AllRounder.setVisible(true);
     }//GEN-LAST:event_mnuAllrounderActionPerformed
 
-    private void mnuWkeeperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuWkeeperActionPerformed
+    private void mnuWicketKeeperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuWicketKeeperActionPerformed
         // TODO add your handling code here:
-        WicketKeeper_Frm WkFrm=new  WicketKeeper_Frm(); 
-        WkFrm.setVisible(true);
-    }//GEN-LAST:event_mnuWkeeperActionPerformed
+        WicketKeeper_Frm WicketKeeper=new  WicketKeeper_Frm(); 
+        WicketKeeper.setVisible(true);
+    }//GEN-LAST:event_mnuWicketKeeperActionPerformed
 
-    private void mnuregisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuregisterActionPerformed
+    private void mnuChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuChangePasswordActionPerformed
         // TODO add your handling code here:
-       Register_Frm RgFrm=new  Register_Frm(); 
-        RgFrm.setVisible(true);
-    }//GEN-LAST:event_mnuregisterActionPerformed
+        ChangePassword_Frm ChangePassword= new ChangePassword_Frm();
+        ChangePassword.setVisible(true);
+    }//GEN-LAST:event_mnuChangePasswordActionPerformed
 
-    private void mnuchngepwdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuchngepwdActionPerformed
+    private void mnuResgisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuResgisterActionPerformed
         // TODO add your handling code here:
-        ChangePwd_Frm chg_Frm= new ChangePwd_Frm();
-        chg_Frm.setVisible(true);
-    }//GEN-LAST:event_mnuchngepwdActionPerformed
+        REGISTER_Frm Register=new  REGISTER_Frm(); 
+        Register.setVisible(true);
+    }//GEN-LAST:event_mnuResgisterActionPerformed
+
+    private void mnuViewBowlerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuViewBowlerActionPerformed
+        // TODO add your handling code here:
+         ViewBowlerList_Frm ViewBowler=new  ViewBowlerList_Frm(); 
+         ViewBowler.setVisible(true);
+    }//GEN-LAST:event_mnuViewBowlerActionPerformed
+
+    private void mnuPCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPCategoryActionPerformed
+        // TODO add your handling code here:
+        PlayersCategory_Frm Register=new  PlayersCategory_Frm(); 
+        Register.setVisible(true);
+    }//GEN-LAST:event_mnuPCategoryActionPerformed
+
+    private void mnunewbatsmanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnunewbatsmanActionPerformed
+        // TODO add your handling code here:
+        Batsman_SelectionFrm  NewBatsman=new  Batsman_SelectionFrm(); 
+        NewBatsman.setVisible(true);
+    }//GEN-LAST:event_mnunewbatsmanActionPerformed
+
+    private void mnunewbowlerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnunewbowlerActionPerformed
+        // TODO add your handling code here:
+        Bowler_SelectionFrm  NewBowler=new  Bowler_SelectionFrm(); 
+        NewBowler.setVisible(true);
+    }//GEN-LAST:event_mnunewbowlerActionPerformed
+
+    private void mnuNewAllrounderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuNewAllrounderActionPerformed
+        // TODO add your handling code here:
+        AllRounder_SelectionFrm  NewAllRounder=new  AllRounder_SelectionFrm(); 
+        NewAllRounder.setVisible(true);
+    }//GEN-LAST:event_mnuNewAllrounderActionPerformed
+
+    private void mnuNewkeeperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuNewkeeperActionPerformed
+        // TODO add your handling code here:
+         WicketKeeper_SelectionFrm  Keeper=new  WicketKeeper_SelectionFrm(); 
+         Keeper.setVisible(true);
+    }//GEN-LAST:event_mnuNewkeeperActionPerformed
+
+    private void mnuViewBatsmanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuViewBatsmanActionPerformed
+        // TODO add your handling code here:
+         ViewBatsmanList_Frm  ViewBatsman=new  ViewBatsmanList_Frm(); 
+         ViewBatsman.setVisible(true);
+    }//GEN-LAST:event_mnuViewBatsmanActionPerformed
+
+    private void mnuViewAllrounderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuViewAllrounderActionPerformed
+        // TODO add your handling code here:
+         ViewAllRounder_Frm  ViewAllrounder=new  ViewAllRounder_Frm(); 
+         ViewAllrounder.setVisible(true);
+    }//GEN-LAST:event_mnuViewAllrounderActionPerformed
+
+    private void mnuViewWicketKeeperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuViewWicketKeeperActionPerformed
+        // TODO add your handling code here:
+         ViewWicketKeeper_Frm ViewKeeper=new  ViewWicketKeeper_Frm(); 
+         ViewKeeper.setVisible(true);
+    }//GEN-LAST:event_mnuViewWicketKeeperActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
+        /*
+         * Set the Nimbus look and feel
+         */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the
+         * default look and feel. For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -256,46 +388,61 @@ public class MAIN_Frm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MAIN_Frm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main_Frm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MAIN_Frm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main_Frm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MAIN_Frm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main_Frm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MAIN_Frm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main_Frm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /*
+         * Create and display the form
+         */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
-                new MAIN_Frm().setVisible(true);
+                new Main_Frm().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu10;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
+    private javax.swing.JMenu jMenu8;
+    private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
-    private javax.swing.JMenuBar jMenuBar3;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jmnuBatsamn;
-    private javax.swing.JLabel lblstatus;
-    private javax.swing.JLabel lbluname;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JLabel lblDate;
+    private javax.swing.JMenu mnuAllrouders;
     private javax.swing.JMenuItem mnuAllrounder;
-    private javax.swing.JMenuItem mnuWkeeper;
-    private javax.swing.JMenuItem mnubowler;
-    private javax.swing.JMenuItem mnuchngepwd;
-    private javax.swing.JMenuItem mnuregister;
+    private javax.swing.JMenuItem mnuBatsman;
+    private javax.swing.JMenu mnuBatsmans;
+    private javax.swing.JMenuItem mnuBowler;
+    private javax.swing.JMenu mnuBowlers;
+    private javax.swing.JMenuItem mnuChangePassword;
+    private javax.swing.JMenu mnuKeepers;
+    private javax.swing.JMenuItem mnuNewAllrounder;
+    private javax.swing.JMenuItem mnuNewkeeper;
+    private javax.swing.JMenuItem mnuPCategory;
+    private javax.swing.JMenuItem mnuResgister;
+    private javax.swing.JMenuItem mnuViewAllrounder;
+    private javax.swing.JMenuItem mnuViewBatsman;
+    private javax.swing.JMenuItem mnuViewBowler;
+    private javax.swing.JMenuItem mnuViewWicketKeeper;
+    private javax.swing.JMenuItem mnuWicketKeeper;
+    private javax.swing.JMenuItem mnunewbatsman;
+    private javax.swing.JMenuItem mnunewbowler;
     // End of variables declaration//GEN-END:variables
 }

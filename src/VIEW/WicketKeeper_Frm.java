@@ -1,52 +1,102 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 package VIEW;
 
-
-import java.util.ArrayList;
 import MODEL.*;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import CONTROLLER.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author MASS MNM
  */
 public class WicketKeeper_Frm extends javax.swing.JFrame {
-    private ArrayList<Wicket_KeeperList>  WKList;
-    private String Player_Name;
-    private int Matchs,Stemps,Catchs;
-    private int count;
-    private DefaultTableModel tblModel;
+ private ArrayList<Wicket_KeeperList>  WKList;    //ADD to ArrayList
+ private Player_RoleDB RoleDB; 
+ private MasterDB    MasterDB;
+ private ArrayList<Neural_WicketKeeperList>NList;
+ private DefaultTableModel tblModel;
+ 
+Connection conn=null;
+ResultSet rs=null;
+PreparedStatement pst=null;
+ 
+    
     /**
      * Creates new form WicketKeeper_Frm
      */
     public WicketKeeper_Frm() {
         initComponents();
-        WKList= new ArrayList<>();
-        Player_Name=new String();
-        Matchs=0;
-        Stemps=0;
-        Catchs=0;
-        count=0;
-        tblModel=new DefaultTableModel();
-        tblJPlayers.setModel(tblModel);
-        tblModel.addColumn("Player Name");
-        tblModel.addColumn("No of Matchs");
-        tblModel.addColumn("Catchs");
-        tblModel.addColumn("Stemps");
+        WKList= new ArrayList<>(); 
+        RoleDB= new Player_RoleDB();
+        MasterDB= new MasterDB();      
+        NList= new ArrayList<>();
+        conn = new DBConnection().getConnection();
+        
+      ArrayList<PLayer_Role> RList=RoleDB.getPlayerRole();
          
-        Calendar cal = new GregorianCalendar();
-        int month = cal.get(Calendar.MONTH);
-        int year = cal.get(Calendar.YEAR);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        txtSyDate.setText(year + "/" + (month + 1) + "/" + day);
+        for(PLayer_Role u:RList){
+            cmbPlayerRole.addItem(u.getRole_Name());   
+        }
+          tblModel=new DefaultTableModel();
+          jwicketkeeper.setModel(tblModel);
+        
+        tblModel.addColumn("Player ID");
+        tblModel.addColumn("Player Name");
+        tblModel.addColumn("Player Role");
+        tblModel.addColumn("Player Category");
+        tblModel.addColumn("Nationality");
+        tblModel.addColumn("Match Type");
+        tblModel.addColumn("Total Match");
+        tblModel.addColumn("Total Catchs");
+        tblModel.addColumn("Total Stumps");
+        tblModel.addColumn("Stump Weights");
+        tblModel.addColumn("Catch Weights");
+        tblModel.addColumn("Result");
+        tblModel.addColumn("Error");
+        tblModel.addColumn("Epoc");
+        tblModel.addColumn("Sum");
+        
     }
-
+  
+    private boolean isValidate(){ //Validate change into isValidate
+       
+        if (txtPlayerName.getText().equals(""))  
+        {
+            JOptionPane.showMessageDialog(rootPane, "Player Name is a requied field");  //help message
+            txtPlayerName.requestFocusInWindow();
+            return false;
+        }
+        if (txtNationality.getText().equals(""))  
+        {
+            JOptionPane.showMessageDialog(rootPane, "Nationality  is a requied field");  //help message
+            txtNationality.requestFocusInWindow();
+            return false;
+        }
+        if (txtNoCatch.getText().equals("")) //flag=false;
+        {
+            JOptionPane.showMessageDialog(rootPane, "Total Catchs is a requied field");   
+            txtNoCatch.requestFocusInWindow();
+            return false;
+        }
+         
+        if (txtNoStump.getText().equals("")) //flag=false;
+        {
+            JOptionPane.showMessageDialog(rootPane, "Total Stumps is a requied field");  
+            txtNoStump.requestFocusInWindow();
+            return false;
+        }
+      
+        return true;
+   }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -56,313 +106,564 @@ public class WicketKeeper_Frm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
-        txtplayername = new javax.swing.JTextField();
+        lblNationality = new javax.swing.JLabel();
+        lblPlayerID = new javax.swing.JLabel();
+        lblPlayerName = new javax.swing.JLabel();
+        lblMatchtype = new javax.swing.JLabel();
+        lblTotMatch = new javax.swing.JLabel();
+        lblPlayerRole = new javax.swing.JLabel();
+        lblNoStump = new javax.swing.JLabel();
+        lblNoCatch = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtNo_ofMatch = new javax.swing.JTextField();
-        txtcatchs = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        txtstemps = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        txtSyDate = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        btnenroll = new javax.swing.JButton();
-        btndisplay = new javax.swing.JButton();
-        btnprocess = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tblJPlayers = new javax.swing.JTable();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        cmbPlayerRole = new javax.swing.JComboBox();
+        cmbMatchType = new javax.swing.JComboBox();
+        txtPlayerID = new javax.swing.JTextField();
+        txtPlayerName = new javax.swing.JTextField();
+        txtNationality = new javax.swing.JTextField();
+        txtsum = new javax.swing.JTextField();
+        txtNoCatch = new javax.swing.JTextField();
+        txtNoStump = new javax.swing.JTextField();
+        btnAdd = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
+        btnProcess = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        cmbcategory = new javax.swing.JComboBox<>();
+        txtepoc = new javax.swing.JTextField();
+        txtcatcweight = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jwicketkeeper = new javax.swing.JTable();
+        jSeparator1 = new javax.swing.JSeparator();
+        txtTotMatch = new javax.swing.JTextField();
+        txtresult = new javax.swing.JTextField();
+        txterror = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        txtstumweight = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        setMaximumSize(new java.awt.Dimension(1000, 621));
+        setMinimumSize(new java.awt.Dimension(1000, 621));
+        setPreferredSize(new java.awt.Dimension(1000, 621));
+        setResizable(false);
+        getContentPane().setLayout(null);
 
-        txtplayername.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtplayernameKeyTyped(evt);
-            }
-        });
+        lblNationality.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblNationality);
+        lblNationality.setBounds(790, 130, 100, 30);
 
-        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        lblPlayerID.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblPlayerID);
+        lblPlayerID.setBounds(380, 90, 100, 30);
+
+        lblPlayerName.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblPlayerName);
+        lblPlayerName.setBounds(380, 130, 100, 30);
+
+        lblMatchtype.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblMatchtype);
+        lblMatchtype.setBounds(380, 170, 100, 30);
+
+        lblTotMatch.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblTotMatch);
+        lblTotMatch.setBounds(380, 210, 100, 30);
+
+        lblPlayerRole.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblPlayerRole);
+        lblPlayerRole.setBounds(790, 90, 100, 30);
+
+        lblNoStump.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblNoStump);
+        lblNoStump.setBounds(790, 210, 100, 30);
+
+        lblNoCatch.setForeground(new java.awt.Color(255, 255, 255));
+        getContentPane().add(lblNoCatch);
+        lblNoCatch.setBounds(790, 170, 100, 30);
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Player ID");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(100, 90, 90, 30);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Player Name");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(100, 130, 90, 30);
 
-        jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel3.setText("Total Matchs");
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Player Role");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(500, 90, 90, 30);
 
-        txtNo_ofMatch.addKeyListener(new java.awt.event.KeyAdapter() {
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Nationality");
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(500, 170, 90, 30);
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Match Type");
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(100, 170, 90, 30);
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Sum");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(100, 360, 80, 30);
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("No of catch");
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(500, 210, 90, 30);
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("No of stump");
+        getContentPane().add(jLabel8);
+        jLabel8.setBounds(500, 250, 90, 30);
+
+        cmbPlayerRole.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select Player Role" }));
+        cmbPlayerRole.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbPlayerRoleItemStateChanged(evt);
+            }
+        });
+        getContentPane().add(cmbPlayerRole);
+        cmbPlayerRole.setBounds(590, 90, 190, 30);
+
+        cmbMatchType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "IPL", "SLPL", "BPL", "CPL" }));
+        getContentPane().add(cmbMatchType);
+        cmbMatchType.setBounds(190, 170, 180, 30);
+        getContentPane().add(txtPlayerID);
+        txtPlayerID.setBounds(190, 90, 180, 30);
+
+        txtPlayerName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtNo_ofMatchKeyTyped(evt);
+                txtPlayerNameKeyTyped(evt);
             }
         });
+        getContentPane().add(txtPlayerName);
+        txtPlayerName.setBounds(190, 130, 180, 30);
 
-        txtcatchs.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtNationality.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtcatchsKeyTyped(evt);
+                txtNationalityKeyTyped(evt);
             }
         });
+        getContentPane().add(txtNationality);
+        txtNationality.setBounds(590, 170, 190, 30);
 
-        jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel7.setText("Catchs");
-
-        jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel5.setText("Stemps");
-
-        txtstemps.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtstempsActionPerformed(evt);
-            }
-        });
-        txtstemps.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtsum.setEditable(false);
+        txtsum.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtstempsKeyTyped(evt);
+                txtsumKeyTyped(evt);
             }
         });
+        getContentPane().add(txtsum);
+        txtsum.setBounds(190, 350, 180, 30);
 
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel1.setText("ENROLLED WICKET KEEPER");
+        txtNoCatch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNoCatchKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtNoCatch);
+        txtNoCatch.setBounds(590, 210, 190, 30);
 
-        txtSyDate.setText("Date");
+        txtNoStump.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNoStumpKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtNoStump);
+        txtNoStump.setBounds(590, 250, 190, 30);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                            .addGap(39, 39, 39)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5))
-                            .addGap(29, 29, 29)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtstemps, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtcatchs, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtplayername, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtNo_ofMatch, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(txtSyDate)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(txtSyDate)
-                .addGap(14, 14, 14)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtplayername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNo_ofMatch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(37, 37, 37)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtcatchs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
-                .addGap(29, 29, 29)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtstemps, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(39, 39, 39))
-        );
-
-        btnenroll.setText("ENROLLED");
-        btnenroll.addActionListener(new java.awt.event.ActionListener() {
+        btnAdd.setBackground(new java.awt.Color(0, 0, 0));
+        btnAdd.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnAdd.setForeground(new java.awt.Color(255, 255, 255));
+        btnAdd.setText("ADD");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnenrollActionPerformed(evt);
+                btnAddActionPerformed(evt);
             }
         });
+        getContentPane().add(btnAdd);
+        btnAdd.setBounds(480, 440, 110, 30);
 
-        btndisplay.setText("DISPLAY");
-        btndisplay.addActionListener(new java.awt.event.ActionListener() {
+        btnClear.setBackground(new java.awt.Color(0, 0, 0));
+        btnClear.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnClear.setForeground(new java.awt.Color(255, 255, 255));
+        btnClear.setText("CLEAR");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btndisplayActionPerformed(evt);
+                btnClearActionPerformed(evt);
             }
         });
+        getContentPane().add(btnClear);
+        btnClear.setBounds(760, 440, 110, 30);
 
-        btnprocess.setText("PROCESS");
+        btnProcess.setBackground(new java.awt.Color(0, 0, 0));
+        btnProcess.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnProcess.setForeground(new java.awt.Color(255, 255, 255));
+        btnProcess.setText("PROCESS");
+        btnProcess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProcessActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnProcess);
+        btnProcess.setBounds(620, 440, 110, 30);
 
-        jButton4.setText("PRECENTAGE");
+        jLabel9.setFont(new java.awt.Font("Century", 1, 20)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText(" W i c k e t   K e e p e r   F o r m ");
+        getContentPane().add(jLabel9);
+        jLabel9.setBounds(310, 0, 350, 50);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnenroll, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnprocess, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btndisplay, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap())
-        );
+        jLabel11.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Player Category");
+        getContentPane().add(jLabel11);
+        jLabel11.setBounds(500, 140, 90, 14);
 
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btndisplay, btnenroll, btnprocess, jButton4});
+        cmbcategory.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbcategoryItemStateChanged(evt);
+            }
+        });
+        getContentPane().add(cmbcategory);
+        cmbcategory.setBounds(590, 130, 190, 30);
 
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(78, Short.MAX_VALUE)
-                .addComponent(btnenroll, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btndisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
-                .addComponent(btnprocess, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        txtepoc.setEditable(false);
+        getContentPane().add(txtepoc);
+        txtepoc.setBounds(190, 400, 180, 30);
 
-        tblJPlayers.setModel(new javax.swing.table.DefaultTableModel(
+        txtcatcweight.setEditable(false);
+        getContentPane().add(txtcatcweight);
+        txtcatcweight.setBounds(590, 340, 200, 30);
+
+        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setText("Epoc");
+        getContentPane().add(jLabel16);
+        jLabel16.setBounds(100, 400, 70, 30);
+
+        jwicketkeeper.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7", "Title 8", "Title 9"
             }
         ));
-        jScrollPane2.setViewportView(tblJPlayers);
+        jScrollPane1.setViewportView(jwicketkeeper);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 69, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(20, 490, 940, 130);
+        getContentPane().add(jSeparator1);
+        jSeparator1.setBounds(10, 50, 970, 10);
+
+        txtTotMatch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTotMatchKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtTotMatch);
+        txtTotMatch.setBounds(190, 210, 180, 30);
+
+        txtresult.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtresultKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtresult);
+        txtresult.setBounds(190, 260, 180, 30);
+
+        txterror.setEditable(false);
+        txterror.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txterrorKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txterror);
+        txterror.setBounds(190, 310, 180, 30);
+
+        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setText("Error");
+        getContentPane().add(jLabel14);
+        jLabel14.setBounds(100, 300, 90, 30);
+
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("Result");
+        getContentPane().add(jLabel13);
+        jLabel13.setBounds(100, 260, 90, 30);
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Total Match");
+        getContentPane().add(jLabel12);
+        jLabel12.setBounds(100, 210, 90, 30);
+
+        txtstumweight.setEditable(false);
+        getContentPane().add(txtstumweight);
+        txtstumweight.setBounds(590, 300, 200, 30);
+
+        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setText("Catch Weigth");
+        getContentPane().add(jLabel17);
+        jLabel17.setBounds(480, 340, 100, 30);
+
+        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel18.setText("Stump Weigth");
+        getContentPane().add(jLabel18);
+        jLabel18.setBounds(480, 300, 100, 30);
+
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/wicketkeeper.jpg"))); // NOI18N
+        jLabel10.setText("jLabel10");
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(0, -50, 990, 720);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtstempsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtstempsActionPerformed
+    private void btnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtstempsActionPerformed
-
-    private void btnenrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnenrollActionPerformed
-        // TODO add your handling code here:
-         Player_Name= txtplayername.getText();
-         Matchs=Integer.parseInt(txtNo_ofMatch.getText());
-         Catchs=Integer.parseInt(txtcatchs.getText());
-         Stemps =Integer.parseInt(txtstemps.getText());
-         
-         
-         Wicket_KeeperList wk = new Wicket_KeeperList(Player_Name, Matchs, Catchs, Stemps);
+       String  Player_ID  = txtPlayerID.getText();
+       String  Player_Name= txtPlayerName.getText();
+       String  Player_Role= cmbPlayerRole.getSelectedItem().toString();
+       String  PlayerCatgegory=String.valueOf(cmbcategory.getSelectedItem());
+       String  Nationality = txtNationality.getText();
+       String  Match_Type=  cmbMatchType.getSelectedItem().toString();
+       int     TotalMatch=Integer.parseInt(txtTotMatch.getText());
+       int     NoOfCatchs=Integer.parseInt(txtNoCatch.getText());
+       int     NoofStumps=Integer.parseInt(txtNoStump.getText());
+       String  StumpWeight= txtstumweight.getText();
+       String  CatchWeight= txtcatcweight.getText();
+       int     Result= Integer.parseInt(txtresult.getText());
+       String  Error= txterror.getText();
+       String  Epoc=txtepoc.getText();
+       String  Sum  = txtsum.getText();  
         
-           wk.setPlayer_Name(Player_Name);
-           wk.setMatchs(Matchs);
-           wk.setNo_ofCatchs(Catchs);
-           wk.setStemps(Stemps);
-           
+      Neural_WicketKeeperList  NWkeeper= new Neural_WicketKeeperList(Player_ID, Player_Name, Player_Role, PlayerCatgegory, Nationality, Match_Type, TotalMatch, NoOfCatchs, NoofStumps,StumpWeight,CatchWeight,Result, Error, Epoc, Sum);
+        
+        int result=MasterDB.AddWic_KeeperTrainData(NWkeeper);
+             
+            if(result>0){
+                JOptionPane.showMessageDialog(rootPane, "Player DATA is added");
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "Player DATA is not added");
+            }  
+  
+    }//GEN-LAST:event_btnProcessActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        // TODO add your handling code here:
+        if(isValidate()){
+            
+            double x = Double.parseDouble(txtNoCatch.getText());
+            double x1 = 1/x;
+            double y = Double.parseDouble(txtNoStump.getText());
+            double y1 = 1/y;
+            int s=Integer.parseInt(txtresult.getText());   
+            
+            
+       String  Player_ID  = txtPlayerID.getText();
+       String  Player_Name= txtPlayerName.getText();
+       String  Player_Role= cmbPlayerRole.getSelectedItem().toString();
+       String  PlayerCatgegory=String.valueOf(cmbcategory.getSelectedItem());
+       String  Nationality = txtNationality.getText();
+       String  Match_Type=  cmbMatchType.getSelectedItem().toString();
+       int     TotalMatch=Integer.parseInt(txtTotMatch.getText());
+       int     NoOfCatchs=Integer.parseInt(txtNoCatch.getText());
+       int     NoofStumps=Integer.parseInt(txtNoStump.getText());
+       String  StumpWeight= txtstumweight.getText();
+       String  CatchWeight= txtcatcweight.getText();
+       int     Result= Integer.parseInt(txtresult.getText());
+       String  Error= txterror.getText();
+       String  Epoc=txtepoc.getText();
+       String  Sum  = txtsum.getText();  
          
+           Wicket_KeeperList wk = new Wicket_KeeperList(Player_ID, Player_Name, Player_Role,PlayerCatgegory, Nationality, Match_Type, TotalMatch, NoOfCatchs, NoofStumps,StumpWeight,CatchWeight,Result, Error, Epoc, Sum);
+
            WKList.add(wk);
-            
-           count ++;
-       
-    }//GEN-LAST:event_btnenrollActionPerformed
-
-    private void btndisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndisplayActionPerformed
-        // TODO add your handling code here:
-         tblModel.setRowCount(0);
-       for(int i=0; i<WKList.size(); i++){
-            
-           // JOptionPane.showMessageDialog(null,"Player Name: "+WKList.get(i).getPlayer_Name()+"\n Matchs: "+WKList.get(i).getMatchs()+"\n No Of Catchs: "+WKList.get(i).getNo_ofCatchs()+"\n Stemps: "+WKList.get(i).getStemps());
-          tblModel.addRow(new Object[]{WKList.get(i).getPlayer_Name(),WKList.get(i).getMatchs(),WKList.get(i).getNo_ofCatchs(),WKList.get(i).getStemps()});
+         
+           Neural_WicketKeeperList  NWkeeper= new Neural_WicketKeeperList(Player_ID, Player_Name, Player_Role, PlayerCatgegory, Nationality, Match_Type, TotalMatch, NoOfCatchs, NoofStumps,StumpWeight,CatchWeight,Result, Error, Epoc, Sum);
           
-        }
+           NWkeeper.getStumpInput(x1, 1);
+           NWkeeper.getCatchInput(y1, 1);
+           NWkeeper.RandomMethodStump();
+           NWkeeper.RandomMethodCatch();
+           NWkeeper.SumFunction();
+           NWkeeper.SumFunction1();
+           NWkeeper.Activate();
+           NWkeeper.TrainingNetwork_Stump(0);
+           NWkeeper.TrainingNetwork_Catch(0);
+   
+           NList.add(NWkeeper);
        
-    
-    }//GEN-LAST:event_btndisplayActionPerformed
+ 
+          int z=0;
+          // while(z<1000)
+           while((z<100)){
+           NWkeeper.TrainingNetwork_Stump(s);
+           NWkeeper.TrainingNetwork_Catch(s);
+           NWkeeper.SumFunction();
+           NWkeeper.SumFunction1();
+           NWkeeper.Activate();
+           
+           
+           txtepoc.setText((Integer.toString(NWkeeper.Epoch++))); 
+            z++;
+          }
+          if(NWkeeper.error==0)
+                txtstumweight.setText(String.valueOf(NWkeeper.Stumps_weights[0]));
+                txtcatcweight.setText(String.valueOf(NWkeeper.Catchs_weights[0]));
+                txterror.setText(Double.toString(NWkeeper.error));
+                txtsum.setText((Double.toString(NWkeeper.sumvalue)));
+             
+                
+           for(int i=0; i<NList.size(); i++){
+            
+           tblModel.addRow(new Object[]{NList.get(i).getPlayerID(),NList.get(i).getPlayer_Name(),NList.get(i).getPlayer_Role(),NList.get(i).getPlayerCategory(),NList.get(i).getNationality(),NList.get(i).getMatch_Type(),NList.get(i).getTotal_Matchs(),NList.get(i).getStumps(),NList.get(i).getNo_ofCatchs(),txtstumweight.getText(), txtcatcweight.getText(),txtresult.getText(),txterror.getText(),txtepoc.getText(),txtsum.getText()});
+          }
+        }
+    }//GEN-LAST:event_btnAddActionPerformed
 
-    private void txtNo_ofMatchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNo_ofMatchKeyTyped
+    private void txtPlayerNameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlayerNameKeyTyped
         // TODO add your handling code here:
-        char c=evt.getKeyChar();
-        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
+          char c=evt.getKeyChar();
+         if (!Character.isLetter(c)){
             evt.consume();
-    }//GEN-LAST:event_txtNo_ofMatchKeyTyped
+        }
+    }//GEN-LAST:event_txtPlayerNameKeyTyped
 
-    private void txtcatchsKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtcatchsKeyTyped
+    private void txtNationalityKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNationalityKeyTyped
         // TODO add your handling code here:
-        char c=evt.getKeyChar();
-        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
-            evt.consume();
-    }//GEN-LAST:event_txtcatchsKeyTyped
+//          char c=evt.getKeyChar();
+//        if (!Character.isLetter(c)){
+//            evt.consume();
+//        }
+    }//GEN-LAST:event_txtNationalityKeyTyped
 
-    private void txtstempsKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtstempsKeyTyped
-        // TODO add your handling code here:
-        char c=evt.getKeyChar();
-        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
-            evt.consume();
-    }//GEN-LAST:event_txtstempsKeyTyped
-
-    private void txtplayernameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtplayernameKeyTyped
+    private void txtNoCatchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoCatchKeyTyped
         // TODO add your handling code here:
          char c=evt.getKeyChar();
-        if (!Character.isLetter(c)){
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
             evt.consume();
-        }
-    }//GEN-LAST:event_txtplayernameKeyTyped
+    }//GEN-LAST:event_txtNoCatchKeyTyped
+
+    private void txtsumKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtsumKeyTyped
+        // TODO add your handling code here:
+    
+    }//GEN-LAST:event_txtsumKeyTyped
+
+    private void txtNoStumpKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoStumpKeyTyped
+        // TODO add your handling code here:
+         char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
+            evt.consume();
+    }//GEN-LAST:event_txtNoStumpKeyTyped
+
+    private void cmbcategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbcategoryItemStateChanged
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_cmbcategoryItemStateChanged
+
+    private void cmbPlayerRoleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPlayerRoleItemStateChanged
+        // TODO add your handling code here:
+         cmbcategory.removeAllItems();
+        
+        String role= cmbPlayerRole.getSelectedItem().toString();
+        String sql="SELECT  * From player_category AS c INNER JOIN player_role AS p ON c.Role_ID=p.Role_ID WHERE p.Role_Name=?";
+        
+        try{
+        
+              pst=conn.prepareStatement(sql);
+              pst.setString(1, role);
+              rs=pst.executeQuery();
+      
+            while(rs.next()){
+               String Category=rs.getString("Category");
+               
+                cmbcategory.addItem(Category);
+              }  
+        
+          }catch(Exception e)
+          {
+            JOptionPane.showMessageDialog(null, e);
+          }
+    }//GEN-LAST:event_cmbPlayerRoleItemStateChanged
+
+    private void txtTotMatchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTotMatchKeyTyped
+        // TODO add your handling code here:
+             char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
+            evt.consume();
+    }//GEN-LAST:event_txtTotMatchKeyTyped
+
+    private void txtresultKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtresultKeyTyped
+        // TODO add your handling code here:
+         char c=evt.getKeyChar();
+        if(c!='0' && c!='1')
+            evt.consume();
+    }//GEN-LAST:event_txtresultKeyTyped
+
+    private void txterrorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txterrorKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txterrorKeyTyped
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        // TODO add your handling code here:
+        txtNationality.setText("");
+        txtNoCatch.setText("");
+        txtNoStump.setText("");
+        txtPlayerID.setText("");
+        txtPlayerName.setText("");
+        txtTotMatch.setText("");
+        txtcatcweight.setText("");
+        txtepoc.setText("");
+        txterror.setText("");
+        txtresult.setText("");
+        txtsum.setText("");
+    }//GEN-LAST:event_btnClearActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
+        /*
+         * Set the Nimbus look and feel
+         */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the
+         * default look and feel. For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -382,34 +683,62 @@ public class WicketKeeper_Frm extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /*
+         * Create and display the form
+         */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new WicketKeeper_Frm().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btndisplay;
-    private javax.swing.JButton btnenroll;
-    private javax.swing.JButton btnprocess;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnProcess;
+    private javax.swing.JComboBox cmbMatchType;
+    private javax.swing.JComboBox cmbPlayerRole;
+    private javax.swing.JComboBox<String> cmbcategory;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable tblJPlayers;
-    private javax.swing.JTextField txtNo_ofMatch;
-    private javax.swing.JLabel txtSyDate;
-    private javax.swing.JTextField txtcatchs;
-    private javax.swing.JTextField txtplayername;
-    private javax.swing.JTextField txtstemps;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTable jwicketkeeper;
+    private javax.swing.JLabel lblMatchtype;
+    private javax.swing.JLabel lblNationality;
+    private javax.swing.JLabel lblNoCatch;
+    private javax.swing.JLabel lblNoStump;
+    private javax.swing.JLabel lblPlayerID;
+    private javax.swing.JLabel lblPlayerName;
+    private javax.swing.JLabel lblPlayerRole;
+    private javax.swing.JLabel lblTotMatch;
+    private javax.swing.JTextField txtNationality;
+    private javax.swing.JTextField txtNoCatch;
+    private javax.swing.JTextField txtNoStump;
+    private javax.swing.JTextField txtPlayerID;
+    private javax.swing.JTextField txtPlayerName;
+    private javax.swing.JTextField txtTotMatch;
+    private javax.swing.JTextField txtcatcweight;
+    private javax.swing.JTextField txtepoc;
+    private javax.swing.JTextField txterror;
+    private javax.swing.JTextField txtresult;
+    private javax.swing.JTextField txtstumweight;
+    private javax.swing.JTextField txtsum;
     // End of variables declaration//GEN-END:variables
 }

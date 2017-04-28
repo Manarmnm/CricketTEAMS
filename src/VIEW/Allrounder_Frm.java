@@ -5,8 +5,14 @@
  */
 package VIEW;
 
-import MODEL.Allrounder_List;
+import CONTROLLER.*;
+import MODEL.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Arrays;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,18 +21,39 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Allrounder_Frm extends javax.swing.JFrame {
   private ArrayList<Allrounder_List>  AllList;
-   private DefaultTableModel tblModel;
+  private DefaultTableModel tblModel;
+  private MasterDB    MasterDB;
+  private ArrayList<Neural_AllRounderList>NList;
+  private Player_RoleDB RoleDB; 
+  
+Connection conn=null;
+ResultSet rs=null;
+PreparedStatement pst=null;
     /**
      * Creates new form Allrounder_Frm
      */
     public Allrounder_Frm() {
         initComponents();
           AllList= new ArrayList<>();
-         tblModel=new DefaultTableModel();
-        jallrouder.setModel(tblModel);
+          NList= new ArrayList<>();
+          RoleDB= new Player_RoleDB();
+          MasterDB= new MasterDB();
+          conn = new DBConnection().getConnection();
+        
+        ArrayList<PLayer_Role> RList=RoleDB.getPlayerRole();
+         
+        for(PLayer_Role u:RList){
+            cmbPlrole.addItem(u.getRole_Name());   
+        }
+          
+          
+          tblModel=new DefaultTableModel();
+          jallrouder.setModel(tblModel);
+        
         tblModel.addColumn("Player ID");
         tblModel.addColumn("Player Name");
         tblModel.addColumn("Player Role");
+        tblModel.addColumn("Player Category");
         tblModel.addColumn("Nationality");
         tblModel.addColumn("Match Type");
         tblModel.addColumn("No of Matchs");
@@ -35,8 +62,60 @@ public class Allrounder_Frm extends javax.swing.JFrame {
         tblModel.addColumn("Bowling Average");
         tblModel.addColumn("Bowling Economy");
         tblModel.addColumn("Best Bowl");
+        tblModel.addColumn("Perfact Weights");
+        tblModel.addColumn("Result");
+        tblModel.addColumn("Error");
+        tblModel.addColumn("Epoc");
+        tblModel.addColumn("Sum");
     }
-
+    
+   private boolean isValidate(){ //Validate change into isValidate
+       
+        if (txtplname.getText().equals(""))  
+        {
+            JOptionPane.showMessageDialog(rootPane, "Player Name is a requied field");  //help message
+            txtplname.requestFocusInWindow();
+            return false;
+        }
+        if (txtnatinalty.getText().equals(""))  
+        {
+            JOptionPane.showMessageDialog(rootPane, "Nationality  is a requied field");  //help message
+            txtnatinalty.requestFocusInWindow();
+            return false;
+        }
+        if (txtbatsttrike.getText().equals("")) //flag=false;
+        {
+            JOptionPane.showMessageDialog(rootPane, "Batting Strike Rate is a requied field");   
+            txtbatsttrike.requestFocusInWindow();
+            return false;
+        }
+        if (txttoamatch.getText().equals("")) //flag=false;
+        {
+            JOptionPane.showMessageDialog(rootPane, "Total Matchs is a requied field");  
+            txttoamatch.requestFocusInWindow();
+            return false;
+        }
+        if (txtbatavrg.getText().equals("")) //flag=false;
+        {
+            JOptionPane.showMessageDialog(rootPane, "Batting Average is a requied field");  
+            txtbatavrg.requestFocusInWindow();
+            return false;
+        }
+        if (txtboweaverg.getText().equals("")) //flag=false;
+        {
+            JOptionPane.showMessageDialog(rootPane, "Bowling Average is a requied field");  
+            txtbatavrg.requestFocusInWindow();
+            return false;
+        }
+        if (txtbwmenkomy.getText().equals("")) //flag=false;
+        {
+            JOptionPane.showMessageDialog(rootPane, "Bowling Economy is a requied field");  
+            txtbatavrg.requestFocusInWindow();
+            return false;
+        }
+      
+        return true;
+   }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,111 +125,307 @@ public class Allrounder_Frm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        btnadd = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        btnprocess = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        btnclear = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
+        txtid = new javax.swing.JTextField();
+        cmbPlrole = new javax.swing.JComboBox();
+        cmbcategory = new javax.swing.JComboBox<>();
+        cmbmattype = new javax.swing.JComboBox();
+        txtbatavrg = new javax.swing.JTextField();
+        txtbwmenkomy = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        txtid = new javax.swing.JTextField();
-        cmbPlrole = new javax.swing.JComboBox();
-        cmbmattype = new javax.swing.JComboBox();
-        txtbatsttrike = new javax.swing.JTextField();
-        txtbwmenkomy = new javax.swing.JTextField();
-        txtbestbowel = new javax.swing.JTextField();
-        txtboweaverg = new javax.swing.JTextField();
-        txttoamatch = new javax.swing.JTextField();
-        txtnatinalty = new javax.swing.JTextField();
         txtplname = new javax.swing.JTextField();
-        btnadd = new javax.swing.JButton();
-        btndisplaye = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        txtbatavrg = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
+        txtnatinalty = new javax.swing.JTextField();
+        txttoamatch = new javax.swing.JTextField();
+        txtbatsttrike = new javax.swing.JTextField();
+        txtboweaverg = new javax.swing.JTextField();
+        txtbestbowel = new javax.swing.JTextField();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel11 = new javax.swing.JLabel();
+        txtBowEcon = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        txtepoc = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jallrouder = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
+        txtsum = new javax.swing.JTextField();
+        txtresult = new javax.swing.JTextField();
+        txterror = new javax.swing.JTextField();
+        jLabel27 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        txtBatAve = new javax.swing.JTextField();
+        txtBowlAve = new javax.swing.JTextField();
+        txtBatSrate = new javax.swing.JTextField();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+
+        setMaximumSize(new java.awt.Dimension(1055, 700));
+        setMinimumSize(new java.awt.Dimension(1055, 700));
+        setPreferredSize(new java.awt.Dimension(1055, 700));
+        getContentPane().setLayout(null);
+        getContentPane().add(jLabel15);
+        jLabel15.setBounds(14, 217, 0, 0);
+
+        jLabel12.setFont(new java.awt.Font("Century", 1, 20)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("ENROLLMENT ALLROUNDER");
+        getContentPane().add(jLabel12);
+        jLabel12.setBounds(360, 0, 330, 50);
 
         jLabel1.setBackground(new java.awt.Color(153, 153, 153));
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Player ID");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(130, 80, 130, 30);
 
-        jLabel3.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel3.setText("Player Role");
-
-        jLabel5.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel5.setText("Match Type");
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel7.setText("Batting Average");
-
-        jLabel9.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel9.setText("Batting Strike Rate");
-
-        jLabel10.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel10.setText("Bowling Economy");
-
-        jLabel11.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel11.setText("Best Bowling");
-
-        jLabel8.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel8.setText("Bowling Average");
-
-        jLabel6.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel6.setText("Total Match");
-
-        jLabel4.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel4.setText("Nationality");
-
-        jLabel2.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel2.setText("Player Name");
-
-        cmbPlrole.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Batsman", "Bolwer", "Allrounder", "WicketKeeper", " " }));
-
-        cmbmattype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "IPL", "SLPL", "BIG BASE", " " }));
-
-        txtbestbowel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtbestbowelActionPerformed(evt);
-            }
-        });
-
-        btnadd.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnadd.setBackground(new java.awt.Color(0, 0, 0));
+        btnadd.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnadd.setForeground(new java.awt.Color(255, 255, 255));
         btnadd.setText("ADD");
         btnadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnaddActionPerformed(evt);
             }
         });
+        getContentPane().add(btnadd);
+        btnadd.setBounds(470, 620, 110, 32);
 
-        btndisplaye.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btndisplaye.setText("DISPLAY");
-        btndisplaye.addActionListener(new java.awt.event.ActionListener() {
+        jLabel3.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Player Role");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(130, 120, 130, 33);
+
+        btnprocess.setBackground(new java.awt.Color(0, 0, 0));
+        btnprocess.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnprocess.setForeground(new java.awt.Color(255, 255, 255));
+        btnprocess.setText("PROCESS");
+        btnprocess.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btndisplayeActionPerformed(evt);
+                btnprocessActionPerformed(evt);
             }
         });
+        getContentPane().add(btnprocess);
+        btnprocess.setBounds(600, 620, 100, 32);
 
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton3.setText("CANCEL");
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("Player Category");
+        getContentPane().add(jLabel13);
+        jLabel13.setBounds(130, 160, 130, 30);
 
-        jLabel12.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel12.setText("ENROLLMENT ALLROUNDER");
+        jLabel5.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Match Type");
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(130, 210, 130, 30);
+
+        btnclear.setBackground(new java.awt.Color(0, 0, 0));
+        btnclear.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnclear.setForeground(new java.awt.Color(255, 255, 255));
+        btnclear.setText("CLEAR");
+        btnclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnclearActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnclear);
+        btnclear.setBounds(730, 620, 110, 32);
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Result");
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(140, 370, 120, 30);
+
+        jLabel10.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Bowling Economy");
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(560, 270, 130, 30);
+        getContentPane().add(txtid);
+        txtid.setBounds(270, 80, 180, 33);
+
+        cmbPlrole.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select Player Role" }));
+        cmbPlrole.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbPlroleItemStateChanged(evt);
+            }
+        });
+        cmbPlrole.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                cmbPlrolePopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
+        cmbPlrole.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbPlroleActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cmbPlrole);
+        cmbPlrole.setBounds(270, 120, 180, 30);
+
+        getContentPane().add(cmbcategory);
+        cmbcategory.setBounds(270, 160, 180, 36);
+
+        cmbmattype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "IPL", "SLPL", "BPL", "CPL" }));
+        getContentPane().add(cmbmattype);
+        cmbmattype.setBounds(270, 210, 180, 31);
+
+        txtbatavrg.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtbatavrgKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtbatavrg);
+        txtbatavrg.setBounds(270, 320, 180, 33);
+
+        txtbwmenkomy.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtbwmenkomyKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtbwmenkomy);
+        txtbwmenkomy.setBounds(700, 270, 190, 33);
+
+        jLabel8.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Bowling Average");
+        getContentPane().add(jLabel8);
+        jLabel8.setBounds(560, 320, 130, 30);
+
+        jLabel9.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Batting Strike Rate");
+        getContentPane().add(jLabel9);
+        jLabel9.setBounds(130, 270, 130, 30);
+
+        jLabel6.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Total Match");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(560, 160, 130, 30);
+
+        jLabel4.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Nationality");
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(560, 120, 130, 30);
+
+        jLabel2.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Player Name");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(560, 80, 130, 30);
+
+        txtplname.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtplnameKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtplname);
+        txtplname.setBounds(700, 80, 190, 33);
+
+        txtnatinalty.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtnatinaltyKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtnatinalty);
+        txtnatinalty.setBounds(700, 120, 190, 33);
+
+        txttoamatch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txttoamatchKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txttoamatch);
+        txttoamatch.setBounds(700, 160, 190, 33);
+
+        txtbatsttrike.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtbatsttrikeKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtbatsttrike);
+        txtbatsttrike.setBounds(270, 270, 180, 33);
+
+        txtboweaverg.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtboweavergKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtboweaverg);
+        txtboweaverg.setBounds(700, 320, 190, 33);
+
+        txtbestbowel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtbestbowelActionPerformed(evt);
+            }
+        });
+        txtbestbowel.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtbestbowelKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtbestbowel);
+        txtbestbowel.setBounds(700, 370, 190, 33);
+        getContentPane().add(jSeparator1);
+        jSeparator1.setBounds(30, 50, 980, 10);
+
+        jLabel11.setBackground(new java.awt.Color(153, 153, 153));
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Total Wickets");
+        getContentPane().add(jLabel11);
+        jLabel11.setBounds(560, 370, 130, 30);
+
+        txtBowEcon.setEditable(false);
+        getContentPane().add(txtBowEcon);
+        txtBowEcon.setBounds(700, 520, 210, 30);
+
+        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setText("Epoc");
+        getContentPane().add(jLabel16);
+        jLabel16.setBounds(140, 540, 110, 30);
+
+        txtepoc.setEditable(false);
+        getContentPane().add(txtepoc);
+        txtepoc.setBounds(270, 540, 190, 30);
 
         jallrouder.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -165,180 +440,117 @@ public class Allrounder_Frm extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jallrouder);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btnadd, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btndisplaye, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtbatsttrike, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                            .addGap(129, 129, 129)
-                                                            .addComponent(txtid, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                    .addGap(20, 20, 20)
-                                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addGap(0, 0, 0)
-                                                    .addComponent(txtplname, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                            .addGap(129, 129, 129)
-                                                            .addComponent(cmbPlrole, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                    .addGap(20, 20, 20)
-                                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addGap(0, 0, 0)
-                                                    .addComponent(txtnatinalty, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                            .addGap(129, 129, 129)
-                                                            .addComponent(cmbmattype, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                    .addGap(20, 20, 20)
-                                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addGap(0, 0, 0)
-                                                    .addComponent(txttoamatch, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                        .addGap(7, 7, 7))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(29, 29, 29)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(txtbestbowel, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(txtbwmenkomy, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txtboweaverg, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(119, 119, 119)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtbatavrg, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(107, 107, 107))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 769, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(65, 65, 65))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel12)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtid, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtplname, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(7, 7, 7)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbPlrole, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtnatinalty, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(40, 40, 40))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(btnadd, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmbmattype, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btndisplaye, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txttoamatch, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtbatavrg, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtbatsttrike, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 65, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtbestbowel, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(29, 29, 29))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtboweaverg, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtbwmenkomy, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(0, 680, 1020, 100);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 715, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
+        txtsum.setEditable(false);
+        txtsum.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtsumKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtsum);
+        txtsum.setBounds(270, 480, 180, 33);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(180, 180, 180))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 844, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 310, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        txtresult.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtresultKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txtresult);
+        txtresult.setBounds(270, 370, 180, 33);
+
+        txterror.setEditable(false);
+        txterror.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txterrorKeyTyped(evt);
+            }
+        });
+        getContentPane().add(txterror);
+        txterror.setBounds(270, 430, 180, 33);
+
+        jLabel27.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel27.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel27.setText("Bow_Ave Weight");
+        getContentPane().add(jLabel27);
+        jLabel27.setBounds(560, 560, 120, 30);
+
+        jLabel21.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel21.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel21.setText("Sum");
+        getContentPane().add(jLabel21);
+        jLabel21.setBounds(140, 480, 110, 30);
+
+        jLabel19.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel19.setText("Error");
+        getContentPane().add(jLabel19);
+        jLabel19.setBounds(140, 430, 110, 30);
+
+        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel18.setText("Bow_Econ Weight");
+        getContentPane().add(jLabel18);
+        jLabel18.setBounds(560, 520, 120, 30);
+
+        jLabel20.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel20.setText("Batting Average");
+        getContentPane().add(jLabel20);
+        jLabel20.setBounds(130, 320, 130, 30);
+
+        txtBatAve.setEditable(false);
+        getContentPane().add(txtBatAve);
+        txtBatAve.setBounds(700, 480, 210, 30);
+
+        txtBowlAve.setEditable(false);
+        getContentPane().add(txtBowlAve);
+        txtBowlAve.setBounds(700, 560, 210, 30);
+
+        txtBatSrate.setEditable(false);
+        getContentPane().add(txtBatSrate);
+        txtBatSrate.setBounds(700, 430, 210, 30);
+
+        jLabel23.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel23.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel23.setText("Bat_Ave Weight");
+        getContentPane().add(jLabel23);
+        jLabel23.setBounds(560, 480, 110, 30);
+
+        jLabel22.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel22.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel22.setText("Bat_Srate Weight");
+        getContentPane().add(jLabel22);
+        jLabel22.setBounds(560, 430, 110, 30);
+
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/allround.jpg"))); // NOI18N
+        jLabel14.setText("jLabel14");
+        getContentPane().add(jLabel14);
+        jLabel14.setBounds(0, 0, 1050, 750);
+
+        jLabel24.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel24.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel24.setText("Bow_Econ Weight");
+        getContentPane().add(jLabel24);
+        jLabel24.setBounds(560, 520, 120, 30);
+
+        jLabel25.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel25.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel25.setText("Bow_Econ Weight");
+        getContentPane().add(jLabel25);
+        jLabel25.setBounds(560, 520, 120, 30);
+
+        jLabel26.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel26.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel26.setText("Bow_Econ Weight");
+        getContentPane().add(jLabel26);
+        jLabel26.setBounds(560, 520, 120, 30);
+
+        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setText("Perfact Weight");
+        getContentPane().add(jLabel17);
+        jLabel17.setBounds(560, 420, 110, 30);
 
         pack();
         setLocationRelativeTo(null);
@@ -350,44 +562,264 @@ public class Allrounder_Frm extends javax.swing.JFrame {
 
     private void btnaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaddActionPerformed
         // TODO add your handling code here:
+        if(isValidate()){
+             double x = Double.parseDouble(txtbatsttrike.getText());
+            double x1 = 1/x;
+            double y = Double.parseDouble(txtbatavrg.getText());
+            double y1 = 1/y;
+            double p = Double.parseDouble(txtbwmenkomy.getText());
+            double p1 = 1/y;
+            double q = Double.parseDouble(txtboweaverg.getText());
+            double q1 = 1/y;
+            int s=Integer.parseInt(txtresult.getText()); 
+                  
             String Allrounder_ID= txtid.getText();
             String PLname= txtplname.getText();
             String PlayerRole=String.valueOf(cmbPlrole.getSelectedItem());
+            String PlayerCatgegory=String.valueOf(cmbcategory.getSelectedItem());
             String Nationality= txtnatinalty.getText();
             String Matchtype= String.valueOf(cmbmattype.getSelectedItem());
-            int totmathc=Integer.parseInt( txttoamatch.getText());
+            int    totmathc=Integer.parseInt( txttoamatch.getText());
             double Bataverage=Double.parseDouble( txtbatavrg.getText());
             double BatStrikerate=Double.parseDouble( txtbatsttrike.getText());
             double BowlVAerge=Double.parseDouble(  txtboweaverg.getText());
             double bowleconom=Double.parseDouble(  txtbwmenkomy.getText());
-            int BestBowl=Integer.parseInt( txtbestbowel.getText());
-           
-            Allrounder_List all = new Allrounder_List(Allrounder_ID, PlayerRole, PlayerRole, Nationality, Matchtype,totmathc,Bataverage,BatStrikerate,BowlVAerge,bowleconom,BestBowl);
-        
-           all.setAllrounder_ID(Allrounder_ID);
-           all.setPlayerName(PLname);
-           all.setPlayerRole(PlayerRole);
-           all.setNationality(Nationality);
-           all.setMatchType(Matchtype);
-           all.setTotalMatchs(totmathc);
-           all.setBat_Average(Bataverage);
-           all.setStrike_Rate(BatStrikerate);
-           all.setBowl_Average(BowlVAerge);
-           all.setBowl_Economy(bowleconom);
-           all.setBestbowl(BestBowl);
+            int    BestBowl=Integer.parseInt( txtbestbowel.getText());
+            String BatSrateWeight= txtBatSrate.getText();
+            String BatAveWeight= txtBatAve.getText();
+            String BowlEconWeight= txtBowEcon.getText();
+            String BowlAverWeight= txtBowlAve.getText(); 
+            int    Result= Integer.parseInt(txtresult.getText());
+            String Error=  txterror.getText();
+            String Epoc=  txtepoc.getText();
+            String Sum  = txtsum.getText();  
+          
+          
+            Allrounder_List all = new Allrounder_List(Allrounder_ID, PLname, PlayerRole,PlayerCatgegory, Nationality, Matchtype,totmathc,Bataverage,BatStrikerate,BowlVAerge,bowleconom,BestBowl,BatSrateWeight,BatAveWeight,BowlEconWeight,BowlAverWeight, Result, Error, Epoc, Sum);
+     
+            AllList.add(all);  
+       
+           Neural_AllRounderList  allrounder= new Neural_AllRounderList(Allrounder_ID, PLname, PlayerRole, PlayerCatgegory, Nationality, Matchtype, totmathc, BatStrikerate, Bataverage, bowleconom, BowlVAerge, BestBowl,BatSrateWeight,BatAveWeight,BowlEconWeight,BowlAverWeight, Result, Error, Epoc, Sum);
+            
+           allrounder.getSrateInput(x1,1);
+           allrounder.getBatAveInput(y1,1);
+           allrounder.getBEconInput(p1,1);
+           allrounder.getBatAveInput(q1,1);
+           allrounder.RandomMethodSrate();
+           allrounder.RandomMethodAverage();
+           allrounder.RandomMethodBEcon();
+           allrounder.RandomMethodBowAver();
+           allrounder.SumFunction();
+           allrounder.SumFunction1();
+           allrounder.SumFunction2();
+           allrounder.SumFunction3();
+           allrounder.Activate();
+           allrounder.TrainingNetwork(0);
+           allrounder.TrainingNetwork1(0);
+           allrounder.TrainingNetwork2(0);
+           allrounder.TrainingNetwork3(0);
          
-            AllList.add(all);      
+            NList.add(allrounder);
+       
+ 
+          int z=0;
+          // while(z<1000)
+           while((z<100)){
+           allrounder.TrainingNetwork(s);
+           allrounder.TrainingNetwork1(s);
+           allrounder.TrainingNetwork2(s);
+           allrounder.TrainingNetwork3(s);
+           allrounder.SumFunction();
+           allrounder.SumFunction1();
+           allrounder.SumFunction2();
+           allrounder.SumFunction3();
+           allrounder.Activate();
+           
+           
+           txtepoc.setText((Integer.toString(allrounder.Epoch++))); 
+             z++;
+          }
+           
+
+           if(allrounder.error==0)
+                txtBatSrate.setText(String.valueOf(allrounder.Srate_weights[0]));
+                txtBatAve.setText(String.valueOf(allrounder.Ave_weights[0]));
+                txtBowEcon.setText(String.valueOf(allrounder.BEcon_weights[0]));
+                txtBowlAve.setText(String.valueOf(allrounder.BAve_weights[0]));
+                txterror.setText(Double.toString(allrounder.error));
+                txtsum.setText((Double.toString(allrounder.sumvalue)));
+ 
+           
+          for(int i=0; i<NList.size(); i++){
+            
+          
+           tblModel.addRow(new Object[]{NList.get(i).getAllrounder_ID(),NList.get(i).getPlayerName(),NList.get(i).getPlayerRole(),NList.get(i).getPlayerCategory(),NList.get(i).getNationality(),NList.get(i).getMatchType(),NList.get(i).getTotalMatchs(),NList.get(i).getBat_Strike_Rate(),NList.get(i).getBat_Average(),NList.get(i).getBowl_Economy(),NList.get(i).getBowl_Average(),NList.get(i).getBestbowl(),txtBowEcon.getText(),txtresult.getText(),txterror.getText(),txtepoc.getText(),txtsum.getText()});
+          }  
+          
+        }
+        
     }//GEN-LAST:event_btnaddActionPerformed
 
-    private void btndisplayeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndisplayeActionPerformed
+    private void btnprocessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnprocessActionPerformed
         // TODO add your handling code here:
-        tblModel.setRowCount(0);
-         for(int i=0; i<AllList.size(); i++){
+            String Allrounder_ID= txtid.getText();
+            String PLname= txtplname.getText();
+            String PlayerRole=String.valueOf(cmbPlrole.getSelectedItem());
+            String PlayerCatgegory=String.valueOf(cmbcategory.getSelectedItem());
+            String Nationality= txtnatinalty.getText();
+            String Matchtype= String.valueOf(cmbmattype.getSelectedItem());
+            int    totmathc=Integer.parseInt( txttoamatch.getText());
+            double Bataverage=Double.parseDouble( txtbatavrg.getText());
+            double BatStrikerate=Double.parseDouble( txtbatsttrike.getText());
+            double BowlVAerge=Double.parseDouble(  txtboweaverg.getText());
+            double bowleconom=Double.parseDouble(  txtbwmenkomy.getText());
+            int    BestBowl=Integer.parseInt( txtbestbowel.getText());
+            String BatSrateWeight= txtBatSrate.getText();
+            String BatAveWeight= txtBatAve.getText();
+            String BowlEconWeight= txtBowEcon.getText();
+            String BowlAverWeight= txtBowlAve.getText(); 
+            int    Result= Integer.parseInt(txtresult.getText());
+            String Error=  txterror.getText();
+            String Epoc=  txtepoc.getText();
+            String Sum  = txtsum.getText();  
             
-           // JOptionPane.showMessageDialog(null,"Player Name: "+PList.get(i).getPlayer_Name()+"\n Matchs: "+PList.get(i).getMatchs()+"\n Innings: "+PList.get(i).getInnings()+"\n Strike Rate: "+PList.get(i).getStrike_Rate()+"\n Average: "+PList.get(i).getAverage()+"\n High Score: "+PList.get(i).getHigh_Score());
-           tblModel.addRow(new Object[]{AllList.get(i).getAllrounder_ID(),AllList.get(i).getPlayerName(),AllList.get(i).getPlayerRole(),AllList.get(i).getNationality(),AllList.get(i).getMatchType(),AllList.get(i).getBat_Average(),AllList.get(i).getStrike_Rate(),AllList.get(i).getBowl_Economy(),AllList.get(i).getBowl_Average(),AllList.get(i).getBestbowl()});
+           Neural_AllRounderList  allrounder= new Neural_AllRounderList(Allrounder_ID, PLname, PlayerRole, PlayerCatgegory, Nationality, Matchtype, totmathc, BatStrikerate, Bataverage, bowleconom, BowlVAerge, BestBowl,BatSrateWeight,BatAveWeight,BowlEconWeight,BowlAverWeight, Result, Error, Epoc, Sum);
+            
+              int result=MasterDB.AddAllrounder(allrounder);
+
+            if(result>0){
+                JOptionPane.showMessageDialog(rootPane, "Player DATA is added");
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "Player DATA is not added");
+            }    
+    }//GEN-LAST:event_btnprocessActionPerformed
+
+    private void txtbatavrgKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbatavrgKeyTyped
+        // TODO add your handling code here:
+        char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9' && c!='.')
+            evt.consume();
+    }//GEN-LAST:event_txtbatavrgKeyTyped
+
+    private void txtbatsttrikeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbatsttrikeKeyTyped
+        // TODO add your handling code here:
+        char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9' && c!='.')
+            evt.consume();
+    }//GEN-LAST:event_txtbatsttrikeKeyTyped
+
+    private void txtbwmenkomyKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbwmenkomyKeyTyped
+        // TODO add your handling code here:
+        char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9' && c!='.')
+            evt.consume();
+    }//GEN-LAST:event_txtbwmenkomyKeyTyped
+
+    private void txtboweavergKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtboweavergKeyTyped
+        // TODO add your handling code here:
+        char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9' && c!='.')
+            evt.consume();
+    }//GEN-LAST:event_txtboweavergKeyTyped
+
+    private void txtbestbowelKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbestbowelKeyTyped
+        // TODO add your handling code here:
+        char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9' && c!='.'&& c!='-'&& c!='/')
+            evt.consume();
+    }//GEN-LAST:event_txtbestbowelKeyTyped
+
+    private void txttoamatchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txttoamatchKeyTyped
+        // TODO add your handling code here:
+        char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9' && c!='.')
+            evt.consume();
+    }//GEN-LAST:event_txttoamatchKeyTyped
+
+    private void txtnatinaltyKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtnatinaltyKeyTyped
+        // TODO add your handling code here:
+//         char c=evt.getKeyChar();
+//        if (!Character.isLetter(c)){
+//            evt.consume();
+//        }
+    }//GEN-LAST:event_txtnatinaltyKeyTyped
+
+    private void txtplnameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtplnameKeyTyped
+        // TODO add your handling code here:
+         char c=evt.getKeyChar();
+        if (!Character.isLetter(c)){
+            evt.consume();
         }
-    }//GEN-LAST:event_btndisplayeActionPerformed
+    }//GEN-LAST:event_txtplnameKeyTyped
+
+    private void cmbPlroleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPlroleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbPlroleActionPerformed
+
+    private void cmbPlrolePopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cmbPlrolePopupMenuWillBecomeInvisible
+     
+    }//GEN-LAST:event_cmbPlrolePopupMenuWillBecomeInvisible
+
+    private void cmbPlroleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPlroleItemStateChanged
+        // TODO add your handling code here:
+         cmbcategory.removeAllItems();
+        
+        String role= cmbPlrole.getSelectedItem().toString();
+        String sql="SELECT  * From player_category AS c INNER JOIN player_role AS p ON c.Role_ID=p.Role_ID WHERE p.Role_Name=?";
+        
+        try{
+        
+              pst=conn.prepareStatement(sql);
+              pst.setString(1, role);
+              rs=pst.executeQuery();
+      
+            while(rs.next()){
+               String Catgegory=rs.getString("Category");
+               
+                cmbcategory.addItem(Catgegory);
+              }  
+        
+          }catch(Exception e)
+          {
+            JOptionPane.showMessageDialog(null, e);
+          }
+    }//GEN-LAST:event_cmbPlroleItemStateChanged
+
+    private void txtsumKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtsumKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtsumKeyTyped
+
+    private void txtresultKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtresultKeyTyped
+        // TODO add your handling code here:
+         char c=evt.getKeyChar();
+        if(c!='0' && c!='1')
+            evt.consume();
+    }//GEN-LAST:event_txtresultKeyTyped
+
+    private void txterrorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txterrorKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txterrorKeyTyped
+
+    private void btnclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnclearActionPerformed
+        // TODO add your handling code here:
+        txtBatAve.setText("");
+        txtBatSrate.setText("");
+        txtBowEcon.setText("");
+        txtBowlAve.setText("");
+        txtbatavrg.setText("");
+        txtbatsttrike.setText("");
+        txtbestbowel.setText("");
+        txtboweaverg.setText("");
+        txtbwmenkomy.setText("");
+        txtepoc.setText("");
+        txterror.setText("");
+        txtid.setText("");
+        txtnatinalty.setText("");
+        txtplname.setText("");
+        txtresult.setText("");
+        txtsum.setText("");
+        txttoamatch.setText("");
+    }//GEN-LAST:event_btnclearActionPerformed
 
     /**
      * @param args the command line arguments
@@ -426,15 +858,31 @@ public class Allrounder_Frm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnadd;
-    private javax.swing.JButton btndisplaye;
+    private javax.swing.JButton btnclear;
+    private javax.swing.JButton btnprocess;
     private javax.swing.JComboBox cmbPlrole;
+    private javax.swing.JComboBox<String> cmbcategory;
     private javax.swing.JComboBox cmbmattype;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -442,18 +890,25 @@ public class Allrounder_Frm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jallrouder;
+    private javax.swing.JTextField txtBatAve;
+    private javax.swing.JTextField txtBatSrate;
+    private javax.swing.JTextField txtBowEcon;
+    private javax.swing.JTextField txtBowlAve;
     private javax.swing.JTextField txtbatavrg;
     private javax.swing.JTextField txtbatsttrike;
     private javax.swing.JTextField txtbestbowel;
     private javax.swing.JTextField txtboweaverg;
     private javax.swing.JTextField txtbwmenkomy;
+    private javax.swing.JTextField txtepoc;
+    private javax.swing.JTextField txterror;
     private javax.swing.JTextField txtid;
     private javax.swing.JTextField txtnatinalty;
     private javax.swing.JTextField txtplname;
+    private javax.swing.JTextField txtresult;
+    private javax.swing.JTextField txtsum;
     private javax.swing.JTextField txttoamatch;
     // End of variables declaration//GEN-END:variables
 }

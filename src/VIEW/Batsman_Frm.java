@@ -1,15 +1,16 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 package VIEW;
 
-import java.util.ArrayList;
+import CONTROLLER.*;
 import MODEL.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -18,82 +19,104 @@ import javax.swing.table.DefaultTableModel;
  * @author MASS MNM
  */
 public class Batsman_Frm extends javax.swing.JFrame {
-    private ArrayList<PlayersList>  PList;
-    private String Player_Name;
-    private int Matchs,innings,high_score;
-    private double Strik_Rate,Average;
-    private int count;
-    private DefaultTableModel tblModel;
-    /**
+private ArrayList<PlayersList>  PList;       //ADD to ArrayList
+private ArrayList<Neural_Playerlist>NList;
+private Player_RoleDB RoleDB; 
+private MasterDB    MasterDB;
+private DefaultTableModel tblModel;
+
+Connection conn=null;
+ResultSet rs=null;
+PreparedStatement pst=null;
+    /** 
      * Creates new form Batsman_Frm
      */
     public Batsman_Frm() {
         initComponents();
-        PList= new ArrayList<>();
-        Player_Name=new String();
-        Matchs=0;
-        innings=0;
-        high_score=0;
-        Strik_Rate= 0.0;
-        Average=0.0;
-        count=0;  
-        tblModel=new DefaultTableModel();
-        tblJBatsman.setModel(tblModel);
-        tblModel.addColumn("Player Name");
-        tblModel.addColumn("No of Matchs");
-        tblModel.addColumn("Innings");
-        tblModel.addColumn("Strike Rate");
-        tblModel.addColumn("Average");
-        tblModel.addColumn("High Score");
+        PList= new ArrayList<>(); 
+        NList= new ArrayList<>();//ArrayList Variable
+        RoleDB= new Player_RoleDB();
+        MasterDB= new MasterDB();
+        conn = new DBConnection().getConnection();
+        
+        ArrayList<PLayer_Role> RList=RoleDB.getPlayerRole();
          
-        //Date Function
-        Calendar cal = new GregorianCalendar();
-        int month = cal.get(Calendar.MONTH);
-        int year = cal.get(Calendar.YEAR);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        txtSyDate.setText(year + "/" + (month + 1) + "/" + day);
+        for(PLayer_Role u:RList){
+            cmbPlayerRole.addItem(u.getRole_Name());   
+        }
+        
+        tblModel=new DefaultTableModel();
+        jTBatsman.setModel(tblModel);
+        
+        tblModel.addColumn("Player ID");
+        tblModel.addColumn("Player Name");
+        tblModel.addColumn("Player Role");
+        tblModel.addColumn("Player Category");
+        tblModel.addColumn("Nationality");
+        tblModel.addColumn("Match Type");
+        tblModel.addColumn("Total Matchs");
+        tblModel.addColumn("Innings");
+        tblModel.addColumn("Batting Average");
+        tblModel.addColumn("Batting Strike Rate");
+        tblModel.addColumn("High Score");
+        tblModel.addColumn("Total 100's");
+        tblModel.addColumn("Total 50's");
+        tblModel.addColumn("Perfact Weights");
+        tblModel.addColumn("Result");
+        tblModel.addColumn("Error");
+        tblModel.addColumn("Epoc");
+        tblModel.addColumn("Sum");
+              
+      
     }
-   private boolean isValidate(){ //Validate change into isValidate
-       // boolean flag=true;
-       // text boxes can't be empty
-        if (txtplname.getText().equals("")) //flag=false;
+    
+     private boolean isValidate(){ //Validate change into isValidate
+       
+        if (txtPlayerName.getText().equals(""))  
         {
             JOptionPane.showMessageDialog(rootPane, "Player Name is a requied field");  //help message
-            txtplname.requestFocusInWindow();
+            txtPlayerName.requestFocusInWindow();
             return false;
         }
-        if (txtNoMatch.getText().equals("")) //flag=false;
+//        if (cmbPlayerRole.getSelectedItem().equals("")) //flag=false;
+//        {
+//            JOptionPane.showMessageDialog(rootPane, "Player Role is a requied field");  
+//            cmbPlayerRole.requestFocus();
+//            return false;
+//        }
+          if (txtTotalMatch.getText().equals("")) //flag=false;
         {
-            JOptionPane.showMessageDialog(rootPane, "Match  is a requied field");  //help message
-            txtNoMatch.requestFocusInWindow();
+            JOptionPane.showMessageDialog(rootPane, "Total Matchs is a requied field");  
+            txtTotalMatch.requestFocusInWindow();
             return false;
         }
-        if (txtinings.getText().equals("")) //flag=false;
+        if (txtNationality.getText().equals(""))  
         {
-            JOptionPane.showMessageDialog(rootPane, "Innings is a requied field");  //help message
-            txtinings.requestFocusInWindow();
+            JOptionPane.showMessageDialog(rootPane, "Nationality  is a requied field");  //help message
+            txtNationality.requestFocusInWindow();
             return false;
         }
-        if (txtStrikrate.getText().equals("")) //flag=false;
+        if (txtBatStrikeRate.getText().equals("")) //flag=false;
         {
-            JOptionPane.showMessageDialog(rootPane, "Strike Rate is a requied field");  //help message
-            txtStrikrate.requestFocusInWindow();
+            JOptionPane.showMessageDialog(rootPane, "Batting Strike Rate is a requied field");   
+            txtBatStrikeRate.requestFocusInWindow();
             return false;
         }
-         if (txtaverage.getText().equals("")) //flag=false;
+       if (txtBatAverage.getText().equals("")) //flag=false;
         {
-            JOptionPane.showMessageDialog(rootPane, "Average is a requied field");  //help message
-            txtaverage.requestFocusInWindow();
+            JOptionPane.showMessageDialog(rootPane, "Batting Average is a requied field");  
+            txtBatAverage.requestFocusInWindow();
             return false;
         }
-        if (txthighscore.getText().equals("")) //flag=false;
+       if (txtresult.getText().equals("")) //flag=false;
         {
-            JOptionPane.showMessageDialog(rootPane, "High Score is a requied field");  //help message
-            txthighscore.requestFocusInWindow();
+            JOptionPane.showMessageDialog(rootPane, "Result (0 or 1 ) is a requied field");  
+            txtresult.requestFocusInWindow();
             return false;
         }
+    
         return true;
- }
+   }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -103,35 +126,73 @@ public class Batsman_Frm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTBatsman = new javax.swing.JTable();
+        jLabel13 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        lblplayerrole = new javax.swing.JLabel();
+        lblmatchtype = new javax.swing.JLabel();
+        lbltotalmatch = new javax.swing.JLabel();
+        lblstrikrate = new javax.swing.JLabel();
+        lblnationality = new javax.swing.JLabel();
+        lblplayername = new javax.swing.JLabel();
+        lblhigh = new javax.swing.JLabel();
+        lbl100 = new javax.swing.JLabel();
+        lbl50 = new javax.swing.JLabel();
+        lblaverage = new javax.swing.JLabel();
+        txtTotalMatch = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        cmbPRoleType = new javax.swing.JComboBox();
+        jLabel5 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        txtplname = new javax.swing.JTextField();
-        txtNoMatch = new javax.swing.JTextField();
-        txtinings = new javax.swing.JTextField();
-        txtStrikrate = new javax.swing.JTextField();
-        txthighscore = new javax.swing.JTextField();
-        txtaverage = new javax.swing.JTextField();
-        txtSyDate = new javax.swing.JLabel();
+        txtBatStrikeRate = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        txtNo100 = new javax.swing.JTextField();
+        txtHighScore = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        txtpefect = new javax.swing.JTextField();
-        jPanel2 = new javax.swing.JPanel();
-        btndisplay = new javax.swing.JButton();
-        btnprocess = new javax.swing.JButton();
-        btnenroll = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tblJBatsman = new javax.swing.JTable();
+        txtBatAverage = new javax.swing.JTextField();
         txtepoc = new javax.swing.JTextField();
+        cmbPlayerRole = new javax.swing.JComboBox();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        txtPlayerID = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txtPlayerName = new javax.swing.JTextField();
+        txtNationality = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        lblPlayeID = new javax.swing.JLabel();
+        txtInnings = new javax.swing.JTextField();
+        cmbMatchType1 = new javax.swing.JComboBox();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        txtweight = new javax.swing.JTextField();
+        txtsum = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        txtresult = new javax.swing.JTextField();
+        txtNo50 = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        txterror = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        txtweh = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
+        btntraindata = new javax.swing.JButton();
+        btnProcess = new javax.swing.JButton();
+        btnclear = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        setMaximumSize(new java.awt.Dimension(1099, 821));
+        setMinimumSize(new java.awt.Dimension(1099, 821));
+        setPreferredSize(new java.awt.Dimension(1099, 821));
+        getContentPane().setLayout(null);
+        getContentPane().add(jSeparator1);
+        jSeparator1.setBounds(20, 42, 1060, 10);
+
+        jTBatsman.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -142,381 +203,666 @@ public class Batsman_Frm extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jTBatsman);
 
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        jLabel1.setText("ENROLLED BATSMAN");
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(0, 600, 1210, 160);
 
-        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel2.setText("Player Name");
+        jLabel13.setFont(new java.awt.Font("Century", 1, 20)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("B a t s m a n   F o r m ");
+        getContentPane().add(jLabel13);
+        jLabel13.setBounds(420, 0, 260, 40);
 
-        jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel3.setText("Total Matchs");
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.setOpaque(false);
+        jPanel1.setLayout(null);
 
-        jLabel4.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel4.setText("Average");
+        lblplayerrole.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(lblplayerrole);
+        lblplayerrole.setBounds(340, 70, 90, 30);
 
-        jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel5.setText("Strike Rate");
+        lblmatchtype.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(lblmatchtype);
+        lblmatchtype.setBounds(780, 70, 90, 30);
 
-        jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel6.setText("High Score");
+        lbltotalmatch.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(lbltotalmatch);
+        lbltotalmatch.setBounds(780, 110, 90, 30);
 
-        jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        lblstrikrate.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(lblstrikrate);
+        lblstrikrate.setBounds(340, 230, 90, 30);
+
+        lblnationality.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(lblnationality);
+        lblnationality.setBounds(340, 150, 90, 30);
+
+        lblplayername.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(lblplayername);
+        lblplayername.setBounds(780, 30, 90, 30);
+
+        lblhigh.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(lblhigh);
+        lblhigh.setBounds(340, 270, 90, 30);
+
+        lbl100.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(lbl100);
+        lbl100.setBounds(780, 230, 90, 30);
+
+        lbl50.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(lbl50);
+        lbl50.setBounds(790, 290, 90, 30);
+
+        lblaverage.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(lblaverage);
+        lblaverage.setBounds(780, 190, 90, 30);
+
+        txtTotalMatch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTotalMatchKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtTotalMatch);
+        txtTotalMatch.setBounds(580, 110, 190, 30);
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Total Match");
+        jPanel1.add(jLabel6);
+        jLabel6.setBounds(470, 110, 110, 30);
+
+        cmbPRoleType.setToolTipText("");
+        cmbPRoleType.setOpaque(false);
+        cmbPRoleType.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbPRoleTypeItemStateChanged(evt);
+            }
+        });
+        jPanel1.add(cmbPRoleType);
+        cmbPRoleType.setBounds(150, 110, 180, 30);
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Match Type");
+        jPanel1.add(jLabel5);
+        jLabel5.setBounds(470, 70, 100, 30);
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Innings");
+        jPanel1.add(jLabel7);
+        jLabel7.setBounds(20, 190, 100, 30);
 
-        txtplname.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtplnameKeyTyped(evt);
-            }
-        });
-
-        txtNoMatch.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtNoMatchKeyTyped(evt);
-            }
-        });
-
-        txtinings.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtiningsKeyTyped(evt);
-            }
-        });
-
-        txtStrikrate.addActionListener(new java.awt.event.ActionListener() {
+        txtBatStrikeRate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtStrikrateActionPerformed(evt);
+                txtBatStrikeRateActionPerformed(evt);
             }
         });
-        txtStrikrate.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtBatStrikeRate.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtStrikrateKeyTyped(evt);
+                txtBatStrikeRateKeyTyped(evt);
             }
         });
+        jPanel1.add(txtBatStrikeRate);
+        txtBatStrikeRate.setBounds(150, 230, 180, 30);
 
-        txthighscore.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txthighscoreActionPerformed(evt);
-            }
-        });
-        txthighscore.addKeyListener(new java.awt.event.KeyAdapter() {
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("Batting Strike Rate");
+        jPanel1.add(jLabel9);
+        jLabel9.setBounds(20, 230, 120, 30);
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("No of 100's");
+        jPanel1.add(jLabel10);
+        jLabel10.setBounds(460, 230, 110, 30);
+
+        txtNo100.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txthighscoreKeyTyped(evt);
+                txtNo100KeyTyped(evt);
             }
         });
+        jPanel1.add(txtNo100);
+        txtNo100.setBounds(580, 230, 190, 30);
 
-        txtaverage.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtHighScore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHighScoreActionPerformed(evt);
+            }
+        });
+        txtHighScore.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtaverageKeyTyped(evt);
+                txtHighScoreKeyTyped(evt);
             }
         });
+        jPanel1.add(txtHighScore);
+        txtHighScore.setBounds(150, 270, 180, 30);
 
-        txtSyDate.setText("Date");
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("High Score");
+        jPanel1.add(jLabel12);
+        jLabel12.setBounds(20, 270, 130, 30);
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel8.setText("Rendom Wieghts");
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("Result");
+        jPanel1.add(jLabel11);
+        jLabel11.setBounds(20, 340, 110, 30);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txtSyDate)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel8))
-                .addGap(21, 21, 21)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtaverage, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txthighscore, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtStrikrate, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtinings, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtplname, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNoMatch, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtpefect, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
-                .addContainerGap())
-        );
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Batting Average");
+        jPanel1.add(jLabel8);
+        jLabel8.setBounds(460, 190, 110, 30);
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {txtNoMatch, txtStrikrate, txtaverage, txthighscore, txtinings, txtplname});
+        txtBatAverage.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtBatAverageKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtBatAverage);
+        txtBatAverage.setBounds(580, 190, 190, 30);
 
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(txtSyDate)))
-                .addGap(29, 29, 29)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtplname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNoMatch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(37, 37, 37)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(txtinings, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtStrikrate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(28, 28, 28)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtaverage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txthighscore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addGap(37, 37, 37)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(txtpefect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
+        txtepoc.setEditable(false);
+        txtepoc.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtepocKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtepoc);
+        txtepoc.setBounds(580, 430, 190, 30);
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel2, jLabel3, jLabel4, jLabel5, jLabel6, jLabel7});
+        cmbPlayerRole.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select Player Role" }));
+        cmbPlayerRole.setOpaque(false);
+        cmbPlayerRole.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbPlayerRoleItemStateChanged(evt);
+            }
+        });
+        cmbPlayerRole.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                cmbPlayerRolePopupMenuWillBecomeInvisible(evt);
+            }
+            public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+        });
+        jPanel1.add(cmbPlayerRole);
+        cmbPlayerRole.setBounds(150, 70, 180, 30);
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {txtNoMatch, txtStrikrate, txtaverage, txthighscore, txtinings, txtplname});
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("Player Category");
+        jPanel1.add(jLabel3);
+        jLabel3.setBounds(20, 110, 120, 33);
 
-        btndisplay.setText("DISPLAY");
-        btndisplay.addActionListener(new java.awt.event.ActionListener() {
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Player ID");
+        jPanel1.add(jLabel1);
+        jLabel1.setBounds(19, 28, 130, 30);
+
+        txtPlayerID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btndisplayActionPerformed(evt);
+                txtPlayerIDActionPerformed(evt);
             }
         });
+        txtPlayerID.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPlayerIDKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtPlayerID);
+        txtPlayerID.setBounds(149, 28, 180, 30);
 
-        btnprocess.setText("PROCESS");
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Player Name");
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(470, 30, 100, 30);
 
-        btnenroll.setText("ENROLLED");
-        btnenroll.addActionListener(new java.awt.event.ActionListener() {
+        txtPlayerName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPlayerNameKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtPlayerName);
+        txtPlayerName.setBounds(577, 28, 190, 30);
+
+        txtNationality.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNationalityKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtNationality);
+        txtNationality.setBounds(150, 150, 180, 30);
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Nationality");
+        jPanel1.add(jLabel4);
+        jLabel4.setBounds(20, 150, 110, 30);
+
+        lblPlayeID.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(lblPlayeID);
+        lblPlayeID.setBounds(340, 30, 90, 30);
+
+        txtInnings.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtInningsKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtInnings);
+        txtInnings.setBounds(150, 190, 180, 30);
+
+        cmbMatchType1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "IPL", "SLPL", "BPL", "CPL" }));
+        cmbMatchType1.setOpaque(false);
+        jPanel1.add(cmbMatchType1);
+        cmbMatchType1.setBounds(580, 70, 190, 30);
+
+        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setText("Player Role");
+        jPanel1.add(jLabel14);
+        jLabel14.setBounds(20, 70, 130, 33);
+
+        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setText("Sum");
+        jPanel1.add(jLabel16);
+        jLabel16.setBounds(20, 440, 80, 30);
+
+        txtweight.setEditable(false);
+        txtweight.setVerifyInputWhenFocusTarget(false);
+        jPanel1.add(txtweight);
+        txtweight.setBounds(580, 340, 200, 30);
+
+        txtsum.setEditable(false);
+        jPanel1.add(txtsum);
+        txtsum.setBounds(150, 440, 230, 30);
+
+        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setText("No of 50's");
+        jPanel1.add(jLabel17);
+        jLabel17.setBounds(460, 270, 110, 30);
+
+        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel18.setText("Epoc");
+        jPanel1.add(jLabel18);
+        jLabel18.setBounds(500, 430, 70, 30);
+
+        txtresult.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtresultKeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtresult);
+        txtresult.setBounds(150, 340, 180, 30);
+
+        txtNo50.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNo50KeyTyped(evt);
+            }
+        });
+        jPanel1.add(txtNo50);
+        txtNo50.setBounds(580, 270, 190, 30);
+
+        jLabel19.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel19.setText("Average Perfact Weights");
+        jPanel1.add(jLabel19);
+        jLabel19.setBounds(390, 380, 180, 30);
+
+        txterror.setEditable(false);
+        jPanel1.add(txterror);
+        txterror.setBounds(150, 390, 180, 30);
+
+        jLabel20.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel20.setText("Error");
+        jPanel1.add(jLabel20);
+        jLabel20.setBounds(20, 390, 100, 30);
+
+        txtweh.setEditable(false);
+        jPanel1.add(txtweh);
+        txtweh.setBounds(580, 380, 200, 30);
+
+        jLabel21.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel21.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel21.setText("Strike Rate Perfact Weights");
+        jPanel1.add(jLabel21);
+        jLabel21.setBounds(380, 340, 180, 30);
+
+        getContentPane().add(jPanel1);
+        jPanel1.setBounds(40, 60, 990, 470);
+
+        btntraindata.setBackground(new java.awt.Color(0, 0, 0));
+        btntraindata.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btntraindata.setForeground(new java.awt.Color(255, 255, 255));
+        btntraindata.setText("ADD");
+        btntraindata.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnenrollActionPerformed(evt);
+                btntraindataActionPerformed(evt);
             }
         });
+        getContentPane().add(btntraindata);
+        btntraindata.setBounds(520, 560, 140, 32);
 
-        jButton4.setText("PRECENTAGE");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnenroll, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btndisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnprocess, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 20, Short.MAX_VALUE))
-        );
-
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btndisplay, btnenroll, btnprocess, jButton4});
-
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(71, 71, 71)
-                .addComponent(btnenroll, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(btndisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
-                .addComponent(btnprocess, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
-        );
-
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btndisplay, btnenroll, btnprocess, jButton4});
-
-        tblJBatsman.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+        btnProcess.setBackground(new java.awt.Color(0, 0, 0));
+        btnProcess.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnProcess.setForeground(new java.awt.Color(255, 255, 255));
+        btnProcess.setText("Process");
+        btnProcess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProcessActionPerformed(evt);
             }
-        ));
-        jScrollPane2.setViewportView(tblJBatsman);
+        });
+        getContentPane().add(btnProcess);
+        btnProcess.setBounds(680, 560, 120, 32);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtepoc, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane2)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtepoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(36, 36, 36)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        btnclear.setBackground(new java.awt.Color(0, 0, 0));
+        btnclear.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnclear.setForeground(new java.awt.Color(255, 255, 255));
+        btnclear.setText("CLEAR");
+        btnclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnclearActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnclear);
+        btnclear.setBounds(820, 560, 110, 32);
+
+        jLabel15.setIcon(new javax.swing.ImageIcon("F:\\Final Project\\CricketTeam_Selection\\src\\IMAGES\\kumar-sangakkara-wallpaper.jpg")); // NOI18N
+        getContentPane().add(jLabel15);
+        jLabel15.setBounds(0, 0, 1160, 750);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtStrikrateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStrikrateActionPerformed
+    private void txtBatStrikeRateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBatStrikeRateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtStrikrateActionPerformed
+    }//GEN-LAST:event_txtBatStrikeRateActionPerformed
 
-    private void txthighscoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txthighscoreActionPerformed
+    private void btntraindataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntraindataActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txthighscoreActionPerformed
 
-    private void btnenrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnenrollActionPerformed
-        // TODO add your handling code here:
+       if(isValidate()){
+           
+            double x = Double.parseDouble(txtBatStrikeRate.getText());
+            double x1 = 1/x;
+            double y = Double.parseDouble(txtBatAverage.getText());
+            double y1 = 1/y;
+            int s=Integer.parseInt(txtresult.getText()); 
+           
+        String Player_ID= txtPlayerID.getText();
+        String Player_Name= txtPlayerName.getText();
+        String Player_Role= cmbPlayerRole.getSelectedItem().toString();
+        String PlayerCatgegory= cmbPRoleType.getSelectedItem().toString();
+        String Nationality=txtNationality.getText();
+        String Match_Type= cmbMatchType1.getSelectedItem().toString();
+        int    Total_Matchs= Integer.parseInt(txtTotalMatch.getText());
+        int    Innings=  Integer.parseInt(txtInnings.getText());
+        int    High_Score= Integer.parseInt(txtHighScore.getText());
+        int    NoOf100s= Integer.parseInt(txtNo100.getText());
+        int    NoOf50s= Integer.parseInt(txtNo50.getText());
+        double BatStrik_Rate= Double.parseDouble(txtBatStrikeRate.getText());
+        double Bat_Average= Double.parseDouble(txtBatAverage.getText());
+        String SRatePerfactWeight=txtweight.getText();
+        String Averageweight= txtweh.getText();
+        int    Result= Integer.parseInt(txtresult.getText());
+        String Error=  txterror.getText();
+        String Epoc=  txtepoc.getText();
+        String Sum  = txtsum.getText();
         
-      //  Neural_Playerlist n= new Neural_Playerlist(Player_Name, Matchs, innings, Strik_Rate, Average, high_score);
-       if (isValidate()){
+        PlayersList p = new PlayersList(Player_ID, Player_Name, Player_Role,PlayerCatgegory,Nationality, Match_Type, Total_Matchs, Innings, BatStrik_Rate, Bat_Average, NoOf100s, NoOf50s, High_Score,SRatePerfactWeight,Averageweight,Result, Error,Epoc,Sum);    
+        PList.add(p);
         
-         Player_Name= txtplname.getText();
-         Matchs=Integer.parseInt(txtNoMatch.getText());
-         innings=Integer.parseInt(txtinings.getText());
-         high_score=Integer.parseInt(txthighscore.getText());
-         Strik_Rate= Double.parseDouble(txtStrikrate.getText());
-         Average= Double.parseDouble(txtaverage.getText());
-         
-         PlayersList p = new PlayersList(Player_Name, Matchs, innings, Strik_Rate, Average, high_score);
-        
-           p.setPlayer_Name(Player_Name);
-           p.setMatchs(Matchs);
-           p.setInnings(innings);
-           p.setStrike_Rate(Strik_Rate);
-           p.setAverage(Average);
-           p.setHigh_Score(high_score);
-         
-            PList.add(p);
             
-           count ++;
-           
-           Neural_Playerlist n= new Neural_Playerlist(txtplname.getText(),Integer.parseInt( txtNoMatch.getText()),Integer.parseInt(txtinings.getText()),Double.parseDouble(txtStrikrate.getText()),Double.parseDouble(txtaverage.getText()),Integer.parseInt(txthighscore.getText()) );
-           n.getInput();
-           n.RandomMethod();
-           n.SumFunction();
-           n.Activate();
-           n.TrainingNetwork();
-           // n.FirstRun();
-           
-           while(!(n.error==0.0)){
-           n.TrainingNetwork();
-           n.SumFunction();
-           n.Activate();
-         //  n.Adjustment();
-            txtepoc.setText((Integer.toString(n.Epoch++)));
-           }
-           
-            
-           
-           if(n.error==0)
-           txtpefect.setText(Arrays.toString(n.weights));
+        Neural_Playerlist n= new Neural_Playerlist(Player_ID, Player_Name, Player_Role, PlayerCatgegory, Nationality, Match_Type, Total_Matchs, Innings, BatStrik_Rate, Bat_Average, NoOf100s, NoOf50s, High_Score,SRatePerfactWeight,Averageweight,Result,Error,Epoc,Sum);
           
-      }  
-      
-    }//GEN-LAST:event_btnenrollActionPerformed
-
-    private void btndisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndisplayActionPerformed
-        // TODO add your handling code here:
-        tblModel.setRowCount(0);
-         for(int i=0; i<PList.size(); i++){
+           n.getSrate(x1,1);
+           n.getAverage(y1, 1);
+           n.RandomMethodSrate();
+           n.RandomMethodAverage();
+           n.SumFunction();
+           n.SumFunction1();
+           n.Activate();
+           n.TrainingNetwork_Srate(0);
+           n.TrainingNetwork_Average(0);
+           n.FirstRun(); 
+           NList.add(n);
+       
+ 
+          int z=0;
+          // while(z<1000)
+           while((z<100)){
+           n.TrainingNetwork_Srate(s);
+           n.TrainingNetwork_Average(s);
+           n.SumFunction();
+           n.SumFunction1();
+           n.Activate();
+           n.Adjustment();
+           
+           txtepoc.setText((Integer.toString(n.Epoch++))); 
+             z++;
+          }
+           
+          if(n.error==0){
+                 txtweight.setText(String.valueOf(n.S_weights[0]));
+                 txtweh.setText(String.valueOf((n.A_weights[0])));
+                 txterror.setText(Double.toString(n.error));
+                 txtsum.setText((Double.toString(n.sumvalue)));
+               
+           
+          for(int i=0; i<NList.size(); i++){
             
-           // JOptionPane.showMessageDialog(null,"Player Name: "+PList.get(i).getPlayer_Name()+"\n Matchs: "+PList.get(i).getMatchs()+"\n Innings: "+PList.get(i).getInnings()+"\n Strike Rate: "+PList.get(i).getStrike_Rate()+"\n Average: "+PList.get(i).getAverage()+"\n High Score: "+PList.get(i).getHigh_Score());
-           tblModel.addRow(new Object[]{PList.get(i).getPlayer_Name(),PList.get(i).getMatchs(),PList.get(i).getInnings(),PList.get(i).getStrike_Rate(),PList.get(i).getAverage(),PList.get(i).getHigh_Score()});
+           tblModel.addRow(new Object[]{NList.get(i).getPlayerID(),NList.get(i).getPlayer_Name(),NList.get(i).getPlayer_Role(),NList.get(i).getPlayerCategory(),NList.get(i).getNationality(),NList.get(i).getMatch_Type(),NList.get(i).getTotal_Matchs(),NList.get(i).getInnings(),NList.get(i).getBat_Average(),NList.get(i).getBat_Strike_Rate(),NList.get(i).getHigh_Score(),NList.get(i).getNoOf100s(),NList.get(i).getNoOf50s(),txtweight.getText(),txtweh.getText(), txtresult.getText(),txtsum.getText(),txtepoc.getText(),txtsum.getText()});
+          
+          }  
         }
-    }//GEN-LAST:event_btndisplayActionPerformed
+     }
+    }//GEN-LAST:event_btntraindataActionPerformed
 
-    private void txtplnameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtplnameKeyTyped
+    private void txtPlayerIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlayerIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPlayerIDActionPerformed
+
+    private void txtPlayerIDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlayerIDKeyTyped
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txtPlayerIDKeyTyped
+
+    private void txtTotalMatchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTotalMatchKeyTyped
+        // TODO add your handling code here:
+        char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
+            evt.consume();
+    }//GEN-LAST:event_txtTotalMatchKeyTyped
+
+    private void txtBatStrikeRateKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBatStrikeRateKeyTyped
+        // TODO add your handling code here:
+        char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9' && c!='.')
+            evt.consume();
+    }//GEN-LAST:event_txtBatStrikeRateKeyTyped
+
+    private void txtBatAverageKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBatAverageKeyTyped
+        // TODO add your handling code here:
+        char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9' && c!='.')
+            evt.consume();
+    }//GEN-LAST:event_txtBatAverageKeyTyped
+
+    private void txtNo100KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNo100KeyTyped
+        // TODO add your handling code here:
+        char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
+            evt.consume();
+    }//GEN-LAST:event_txtNo100KeyTyped
+
+    private void txtepocKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtepocKeyTyped
+        // TODO add your handling code here:
+        char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
+            evt.consume();
+    }//GEN-LAST:event_txtepocKeyTyped
+
+    private void txtHighScoreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHighScoreKeyTyped
+        // TODO add your handling code here:
+        char c=evt.getKeyChar();
+        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
+            evt.consume();
+    }//GEN-LAST:event_txtHighScoreKeyTyped
+
+    private void txtPlayerNameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlayerNameKeyTyped
         // TODO add your handling code here:
          char c=evt.getKeyChar();
         if (!Character.isLetter(c)){
             evt.consume();
         }
-    }//GEN-LAST:event_txtplnameKeyTyped
+    }//GEN-LAST:event_txtPlayerNameKeyTyped
 
-    private void txtNoMatchKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoMatchKeyTyped
+    private void txtNationalityKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNationalityKeyTyped
         // TODO add your handling code here:
-        char c=evt.getKeyChar();
-        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
-            evt.consume();
-    }//GEN-LAST:event_txtNoMatchKeyTyped
+//         char c=evt.getKeyChar();
+//        if (!Character.isLetter(c)){
+//            evt.consume();
+//        }
+    }//GEN-LAST:event_txtNationalityKeyTyped
 
-    private void txtiningsKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtiningsKeyTyped
-        // TODO add your handling code here:
-        char c=evt.getKeyChar();
-        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
-            evt.consume();
-    }//GEN-LAST:event_txtiningsKeyTyped
+    private void btnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessActionPerformed
+  
+        String Player_ID= txtPlayerID.getText();
+        String Player_Name= txtPlayerName.getText();
+        String Player_Role= cmbPlayerRole.getSelectedItem().toString();
+        String PlayerCatgegory= cmbPRoleType.getSelectedItem().toString();
+        String Nationality=txtNationality.getText();
+        String Match_Type= cmbMatchType1.getSelectedItem().toString();
+        int    Total_Matchs= Integer.parseInt(txtTotalMatch.getText());
+        int    Innings=  Integer.parseInt(txtInnings.getText());
+        int    High_Score= Integer.parseInt(txtHighScore.getText());
+        int    NoOf100s= Integer.parseInt(txtNo100.getText());
+        int    NoOf50s= Integer.parseInt(txtNo50.getText());
+        double BatStrik_Rate= Double.parseDouble(txtBatStrikeRate.getText());
+        double Bat_Average= Double.parseDouble(txtBatAverage.getText());
+        String SRatePerfactWeight=txtweight.getText();
+        String AveragePerfactWeight= txtweh.getText();
+        int    Result= Integer.parseInt(txtresult.getText());
+        String Error= txterror.getText();
+        String Epoc=txtepoc.getText();
+        String Sum  = txtsum.getText();
+    
+         Neural_Playerlist nt= new Neural_Playerlist(Player_ID, Player_Name, Player_Role, PlayerCatgegory, Nationality, Match_Type, Total_Matchs, Innings, BatStrik_Rate, Bat_Average, NoOf100s, NoOf50s, High_Score,SRatePerfactWeight,AveragePerfactWeight,Result, Error,Epoc,Sum);
+           
+            int result=MasterDB.AddBatsmanTrainData(nt);
 
-    private void txtStrikrateKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtStrikrateKeyTyped
-        // TODO add your handling code here:
-        char c=evt.getKeyChar();
-        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9' && c!='.')
-            evt.consume();
-    }//GEN-LAST:event_txtStrikrateKeyTyped
+            if(result>0){
+                JOptionPane.showMessageDialog(rootPane, "Player DATA is added");
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "Player DATA is not added");
+            }     
+    
+        
+    }//GEN-LAST:event_btnProcessActionPerformed
 
-    private void txtaverageKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtaverageKeyTyped
+    private void txtHighScoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHighScoreActionPerformed
         // TODO add your handling code here:
-        char c=evt.getKeyChar();
-        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9' && c!='.')
-            evt.consume();
-    }//GEN-LAST:event_txtaverageKeyTyped
+    }//GEN-LAST:event_txtHighScoreActionPerformed
 
-    private void txthighscoreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txthighscoreKeyTyped
+    private void txtInningsKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInningsKeyTyped
         // TODO add your handling code here:
-        char c=evt.getKeyChar();
-        if(c!='0' && c!='1' && c!='2' && c!='3' && c!='4' && c!='5' && c!='5' && c!='6' && c!='7' && c!='8' && c!='9')
+    }//GEN-LAST:event_txtInningsKeyTyped
+
+    private void cmbPlayerRolePopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_cmbPlayerRolePopupMenuWillBecomeInvisible
+        // TODO add your handling code here:
+      
+        
+    }//GEN-LAST:event_cmbPlayerRolePopupMenuWillBecomeInvisible
+
+    private void cmbPlayerRoleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPlayerRoleItemStateChanged
+        // TODO add your handling code here:
+            cmbPRoleType.removeAllItems();
+        
+        String role= cmbPlayerRole.getSelectedItem().toString();
+        String sql="SELECT  * From player_category AS c INNER JOIN player_role AS p ON c.Role_ID=p.Role_ID WHERE p.Role_Name=?";
+        
+        try{
+        
+              pst=conn.prepareStatement(sql);
+              pst.setString(1, role);
+              rs=pst.executeQuery();
+      
+            while(rs.next()){
+               String Category=rs.getString("Category");
+               
+                cmbPRoleType.addItem(Category);
+              }  
+        
+          }catch(Exception e)
+          {
+            JOptionPane.showMessageDialog(null, e);
+          }
+        
+    }//GEN-LAST:event_cmbPlayerRoleItemStateChanged
+
+    private void cmbPRoleTypeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPRoleTypeItemStateChanged
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_cmbPRoleTypeItemStateChanged
+
+    private void txtNo50KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNo50KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNo50KeyTyped
+
+    private void btnclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnclearActionPerformed
+        // TODO add your handling code here
+        txtBatAverage.setText("");
+        txtBatStrikeRate.setText("");
+        txtHighScore.setText("");
+        txtInnings.setText("");
+        txtNationality.setText("");
+        txtNo100.setText("");
+        txtNo50.setText("");
+        txtPlayerID.setText("");
+        txtPlayerName.setText("");
+        txtepoc.setText("");
+        txterror.setText("");
+        txtTotalMatch.setText("");
+        txtweh.setText("");
+        txtweight.setText("");
+        txtresult.setText("");
+        txtsum.setText("");
+        
+     
+    }//GEN-LAST:event_btnclearActionPerformed
+
+    private void txtresultKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtresultKeyTyped
+        // TODO add your handling code here:
+         char c=evt.getKeyChar();
+        if(c!='0' && c!='1')
             evt.consume();
-    }//GEN-LAST:event_txthighscoreKeyTyped
+    }//GEN-LAST:event_txtresultKeyTyped
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
-//        Neural_Playerlist n= new Neural_Playerlist( ,12,12,123.51,22.5,5);
-//        n.getInputRate();
-        
-        /* Set the Nimbus look and feel */
+        /*
+         * Set the Nimbus look and feel
+         */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the
+         * default look and feel. For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -536,41 +882,74 @@ public class Batsman_Frm extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /*
+         * Create and display the form
+         */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new Batsman_Frm().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btndisplay;
-    private javax.swing.JButton btnenroll;
-    private javax.swing.JButton btnprocess;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnProcess;
+    private javax.swing.JButton btnclear;
+    private javax.swing.JButton btntraindata;
+    private javax.swing.JComboBox cmbMatchType1;
+    private javax.swing.JComboBox cmbPRoleType;
+    private javax.swing.JComboBox cmbPlayerRole;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable tblJBatsman;
-    private javax.swing.JTextField txtNoMatch;
-    private javax.swing.JTextField txtStrikrate;
-    private javax.swing.JLabel txtSyDate;
-    private javax.swing.JTextField txtaverage;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTable jTBatsman;
+    private javax.swing.JLabel lbl100;
+    private javax.swing.JLabel lbl50;
+    private javax.swing.JLabel lblPlayeID;
+    private javax.swing.JLabel lblaverage;
+    private javax.swing.JLabel lblhigh;
+    private javax.swing.JLabel lblmatchtype;
+    private javax.swing.JLabel lblnationality;
+    private javax.swing.JLabel lblplayername;
+    private javax.swing.JLabel lblplayerrole;
+    private javax.swing.JLabel lblstrikrate;
+    private javax.swing.JLabel lbltotalmatch;
+    private javax.swing.JTextField txtBatAverage;
+    private javax.swing.JTextField txtBatStrikeRate;
+    private javax.swing.JTextField txtHighScore;
+    private javax.swing.JTextField txtInnings;
+    private javax.swing.JTextField txtNationality;
+    private javax.swing.JTextField txtNo100;
+    private javax.swing.JTextField txtNo50;
+    private javax.swing.JTextField txtPlayerID;
+    private javax.swing.JTextField txtPlayerName;
+    private javax.swing.JTextField txtTotalMatch;
     private javax.swing.JTextField txtepoc;
-    private javax.swing.JTextField txthighscore;
-    private javax.swing.JTextField txtinings;
-    private javax.swing.JTextField txtpefect;
-    private javax.swing.JTextField txtplname;
+    private javax.swing.JTextField txterror;
+    private javax.swing.JTextField txtresult;
+    private javax.swing.JTextField txtsum;
+    private javax.swing.JTextField txtweh;
+    private javax.swing.JTextField txtweight;
     // End of variables declaration//GEN-END:variables
 }
